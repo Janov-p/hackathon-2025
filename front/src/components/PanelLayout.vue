@@ -20,7 +20,7 @@ defineProps({
 </script>
 
 <template>
-  <div class="h-[calc(100%-56px)] md:h-full flex flex-col md:flex-row gap-2 md:gap-4 p-2 md:p-4 bg-cm-gray overflow-auto md:overflow-hidden">
+  <div class="h-[calc(100%-56px)] md:h-full flex flex-col md:flex-row gap-3 md:gap-6 p-3 md:p-6 bg-cm-gray overflow-auto md:overflow-hidden">
     <!-- Panneau gauche (Config campagne) - Hidden in edit mode (v-show to preserve state) -->
     <div 
       v-show="!editMode" 

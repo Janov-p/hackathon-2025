@@ -1,6 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
-import Mode2SimulationKPI from '../views/Mode2SimulationKPI.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -21,9 +20,9 @@ const router = createRouter({
       component: () => import('../views/PdfExportView.vue')
     },
     {
-      path: '/mode2-simulation-kpi',
-      name: 'mode2-simulation-kpi',
-      component: Mode2SimulationKPI
+      path: '/kpi-export',
+      name: 'kpi-export',
+      component: () => import('../views/KpiExportView.vue')
     }
   ]
 })

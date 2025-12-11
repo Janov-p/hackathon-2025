@@ -1,5 +1,8 @@
 <script setup>
 import { ref, computed } from 'vue'
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
 
 // Données de référence
 const formats = {
@@ -236,6 +239,15 @@ function getTypeBadgeStyle(type) {
   return styles[type] || { backgroundColor: '#E5E7EB', color: '#3F3F41' }
 }
 
+function getTypeBadgeClass(type) {
+  const classes = {
+    print: 'bg-red-50 text-cm-red',
+    digital: 'bg-gray-100 text-cm-dark',
+    social: 'bg-red-50 text-cm-red'
+  }
+  return classes[type] || 'bg-gray-100 text-cm-dark'
+}
+
 function formatNumber(num) {
   return new Intl.NumberFormat('fr-FR').format(Math.round(num))
 }
@@ -254,460 +266,413 @@ function formatPercent(num) {
 }
 
 function exportResults() {
-  alert('Export PDF - Fonctionnalité à implémenter')
+  if (!kpiResults.value) return
+
+  // Sauvegarder les données dans localStorage pour la page d'export
+  const exportData = {
+    kpiResults: kpiResults.value,
+    mediaItems: mediaItems.value,
+    campaignName: campaignName.value
+  }
+  localStorage.setItem('kpiExportData', JSON.stringify(exportData))
+
+  // Naviguer vers la page d'export
+  router.push('/kpi-export')
+}
+
+function handleFileImport(event) {
+  const file = event.target.files[0]
+  if (!file) return
+
+  const reader = new FileReader()
+  
+  reader.onload = (e) => {
+    try {
+      // Pour un vrai import Excel, il faudrait utiliser une librairie comme xlsx
+      // Ici on simule avec un parsing CSV basique
+      const content = e.target.result
+      const lines = content.split('\n').filter(line => line.trim())
+      
+      // Skip header row
+      const dataLines = lines.slice(1)
+      
+      dataLines.forEach(line => {
+        const cols = line.split(/[,;]/).map(c => c.trim())
+        if (cols.length >= 3) {
+          const [typeName, formatName, quantity, customCpm] = cols
+          
+          // Trouver le type
+          let type = 'print'
+          if (typeName.toLowerCase().includes('digital')) type = 'digital'
+          else if (typeName.toLowerCase().includes('social') || typeName.toLowerCase().includes('réseau')) type = 'social'
+          
+          // Trouver le format correspondant
+          const formatData = formats[type]?.find(f => 
+            f.name.toLowerCase().includes(formatName.toLowerCase()) ||
+            formatName.toLowerCase().includes(f.name.toLowerCase())
+          )
+          
+          if (formatData) {
+            mediaItems.value.push({
+              id: Date.now() + Math.random(),
+              type,
+              format: formatData.id,
+              formatName: formatData.name,
+              quantity: parseInt(quantity) || 1,
+              customPrice: customCpm ? parseFloat(customCpm) : null,
+              baseCPM: formatData.cpm,
+              baseImpressions: formatData.baseImpressions
+            })
+          }
+        }
+      })
+      
+      if (mediaItems.value.length > 0) {
+        showAddForm.value = false
+      }
+    } catch (error) {
+      console.error('Erreur lors de l\'import:', error)
+      alert('Erreur lors de l\'import du fichier. Vérifiez le format.')
+    }
+  }
+  
+  reader.readAsText(file)
+  // Reset input pour permettre de réimporter le même fichier
+  event.target.value = ''
 }
 </script>
 
 <template>
-  <div class="space-y-6">
-    <!-- En-tête -->
-    <div class="p-6 rounded-xl border" style="background-color: #E5E7EB; border-color: #3F3F41;">
-      <div class="flex items-start justify-between">
-        <div>
-          <h2 class="text-2xl font-bold mb-2" style="color: #3F3F41;">Simulation KPI Prévisionnels</h2>
-          <p style="color: #3F3F41;">
-            Saisissez votre plan média existant pour calculer les indicateurs de performance
-          </p>
-        </div>
-        <div class="flex items-center gap-2" style="color: #E2001A;">
-          <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-          </svg>
-        </div>
-      </div>
-    </div>
-
-    <!-- Formulaire -->
-    <div class="rounded-xl shadow-sm border p-6" style="background-color: #FFFFFF; border-color: #3F3F41;">
-      <div class="mb-6">
-        <label class="block text-sm font-medium mb-2" style="color: #3F3F41;">
-          Nom de la campagne
-        </label>
-        <input 
-          v-model="campaignName"
-          type="text"
-          class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:border-transparent"
-          style="border-color: #E5E7EB; background-color: #FFFFFF; color: #3F3F41;"
-          @focus="$event.target.style.boxShadow = 'inset 0 0 0 2px #E2001A'"
-          @blur="$event.target.style.boxShadow = 'none'"
-          placeholder="Ex: Campagne 2025"
-        />
-      </div>
-
-      <!-- Liste des insertions -->
-      <div class="mb-6">
-        <div class="flex items-center justify-between mb-4">
-          <h3 class="text-lg font-semibold" style="color: #3F3F41;">Insertions média</h3>
-          <button 
-            @click="showAddForm = !showAddForm"
-            class="px-4 py-2 text-white rounded-lg hover:opacity-90 transition-colors flex items-center gap-2"
-            style="background-color: #E2001A;"
-          >
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
-            </svg>
-            Ajouter une insertion
-          </button>
+  <div class="h-full flex flex-col md:flex-row gap-3 md:gap-6 p-3 md:p-6 bg-cm-gray">
+    <!-- Panneau gauche : Configuration -->
+    <div class="w-full md:w-1/2 flex flex-col min-h-0">
+      <div class="bg-white rounded-xl md:rounded-2xl shadow-lg flex-1 flex flex-col overflow-hidden">
+        <!-- Header -->
+        <div class="px-4 md:px-6 py-2 md:py-3 bg-cm-red text-white flex-shrink-0 rounded-t-xl md:rounded-t-2xl">
+          <h2 class="text-base md:text-lg font-semibold">Configuration du Plan Média</h2>
         </div>
 
-        <!-- Formulaire d'ajout -->
-        <div v-if="showAddForm" class="p-4 rounded-lg mb-4 border" style="background-color: #E5E7EB; border-color: #3F3F41;">
-          <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-            <div>
-              <label class="block text-sm font-medium mb-1" style="color: #3F3F41;">Type de support</label>
-              <select 
-                v-model="newItem.type"
-                @change="newItem.format = ''"
-                class="w-full px-3 py-2 border rounded-lg"
-                style="border-color: #E5E7EB; background-color: #FFFFFF; color: #3F3F41;"
-              >
-                <option value="print">Print</option>
-                <option value="digital">Digital</option>
-                <option value="social">Réseaux Sociaux</option>
-              </select>
-            </div>
-
-            <div>
-              <label class="block text-sm font-medium mb-1" style="color: #3F3F41;">Format</label>
-              <select 
-                v-model="newItem.format"
-                class="w-full px-3 py-2 border rounded-lg"
-                style="border-color: #E5E7EB; background-color: #FFFFFF; color: #3F3F41;"
-              >
-                <option value="">Sélectionner...</option>
-                <option 
-                  v-for="format in formats[newItem.type]" 
-                  :key="format.id" 
-                  :value="format.id"
-                >
-                  {{ format.name }}
-                </option>
-              </select>
-            </div>
-
-            <div>
-              <label class="block text-sm font-medium mb-1" style="color: #3F3F41;">Quantité</label>
-              <input 
-                v-model.number="newItem.quantity"
-                type="number"
-                min="1"
-                class="w-full px-3 py-2 border rounded-lg"
-                style="border-color: #E5E7EB; background-color: #FFFFFF; color: #3F3F41;"
-              />
-            </div>
-
-            <div>
-              <label class="block text-sm font-medium mb-1" style="color: #3F3F41;">CPM</label>
-              <input 
-                v-model.number="newItem.customPrice"
-                type="number"
-                step="0.01"
-                placeholder="CPM par défaut"
-                class="w-full px-3 py-2 border rounded-lg"
-                style="border-color: #E5E7EB; background-color: #FFFFFF; color: #3F3F41;"
-              />
-            </div>
+        <!-- Contenu scrollable -->
+        <div class="flex-1 overflow-auto p-3 md:p-4 space-y-3">
+          <!-- Nom campagne -->
+          <div>
+            <label class="block text-xs font-medium text-gray-500 mb-1">Campagne</label>
+            <input 
+              v-model="campaignName"
+              type="text"
+              class="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg focus:ring-2 focus:ring-cm-red focus:border-transparent bg-gray-50 text-cm-dark"
+              placeholder="Nom de la campagne"
+            />
           </div>
 
-          <div class="flex gap-2 mt-4">
+          <!-- Boutons d'action -->
+          <div class="flex gap-2">
             <button 
-              @click="addMediaItem"
-              :disabled="!newItem.format"
-              class="px-4 py-2 text-white rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:opacity-90"
-              style="background-color: #E2001A;"
+              @click="showAddForm = !showAddForm"
+              class="flex-1 px-3 py-2 text-xs text-white rounded-lg hover:opacity-90 transition-colors flex items-center justify-center gap-1.5 bg-cm-red"
             >
-              Ajouter
-            </button>
-            <button 
-              @click="showAddForm = false"
-              class="px-4 py-2 rounded-lg"
-              style="background-color: #E5E7EB; color: #3F3F41;"
-            >
-              Annuler
-            </button>
-          </div>
-        </div>
-
-        <!-- Liste des insertions ajoutées -->
-        <div v-if="mediaItems.length === 0" class="text-center py-12 rounded-lg border-2 border-dashed" style="background-color: #E5E7EB; border-color: #3F3F41;">
-          <svg class="w-16 h-16 mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="color: #3F3F41;">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-          </svg>
-          <p class="font-medium" style="color: #3F3F41;">Aucune insertion ajoutée</p>
-          <p class="text-sm mt-1" style="color: #3F3F41;">Cliquez sur "Ajouter une insertion" pour commencer</p>
-        </div>
-
-        <div v-else class="space-y-2">
-          <div 
-            v-for="item in mediaItems" 
-            :key="item.id"
-            class="flex items-center justify-between p-4 border rounded-lg hover:opacity-90 transition-colors"
-            style="background-color: #FFFFFF; border-color: #E5E7EB;"
-          >
-            <div class="flex-1">
-              <div class="flex items-center gap-3">
-                <span 
-                  class="px-2 py-1 text-xs font-medium rounded-full"
-                  :class="{
-                    'print': item.type === 'print',
-                    'digital': item.type === 'digital',
-                    'social': item.type === 'social'
-                  }"
-                  :style="getTypeBadgeStyle(item.type)"
-                >
-                  {{ getTypeName(item.type) }}
-                </span>
-                <span class="font-medium" style="color: #3F3F41;">{{ item.formatName }}</span>
-                <span style="color: #3F3F41;">× {{ item.quantity }}</span>
-              </div>
-              <div class="text-sm mt-1" style="color: #3F3F41;">
-                CPM: {{ formatCurrency(item.customPrice || item.baseCPM) }} • 
-                Impressions: {{ formatNumber(item.baseImpressions * item.quantity) }}
-              </div>
-            </div>
-            <button 
-              @click="removeItem(item.id)"
-              class="p-2 rounded-lg transition-colors"
-              style="color: #E2001A;"
-            >
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
               </svg>
+              Ajouter manuellement
             </button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Résultats KPI -->
-    <div v-if="kpiResults" class="space-y-6">
-      <!-- KPIs principaux - Impact & Exposition -->
-      <div>
-        <h3 class="text-lg font-semibold mb-4 flex items-center gap-2" style="color: #3F3F41;">
-          KPI d'Impact & Exposition
-        </h3>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div class="text-white p-6 rounded-xl shadow-lg" style="background: linear-gradient(135deg, #E2001A 0%, #A80013 100%);">
-            <div class="text-sm font-medium mb-1" style="color: rgba(255, 255, 255, 0.9);">Audience Cumulée Dédupliquée</div>
-            <div class="text-3xl font-bold">{{ formatNumber(kpiResults.audienceCumuleeDedupliquee) }}</div>
-            <div class="text-xs mt-2" style="color: rgba(255, 255, 255, 0.9);">Contacts uniques estimés</div>
+            <label class="flex-1 px-3 py-2 text-xs text-cm-dark rounded-lg hover:bg-gray-100 transition-colors flex items-center justify-center gap-1.5 bg-gray-50 border border-gray-200 cursor-pointer">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+              </svg>
+              Importer Excel
+              <input type="file" accept=".xlsx,.xls,.csv" @change="handleFileImport" class="hidden" />
+            </label>
           </div>
 
-          <div class="text-white p-6 rounded-xl shadow-lg" style="background: linear-gradient(135deg, #3F3F41 0%, #1F1F21 100%);">
-            <div class="text-sm font-medium mb-1" style="color: rgba(255, 255, 255, 0.9);">Taux de Couverture (Reach)</div>
-            <div class="text-3xl font-bold">{{ formatPercent(kpiResults.tauxCouverture) }}</div>
-            <div class="text-xs mt-2" style="color: rgba(255, 255, 255, 0.9);">De la population cible</div>
-          </div>
-
-          <div class="text-white p-6 rounded-xl shadow-lg" style="background: linear-gradient(135deg, #E2001A 0%, #8B000E 100%);">
-            <div class="text-sm font-medium mb-1" style="color: rgba(255, 255, 255, 0.9);">Fréquence Moyenne</div>
-            <div class="text-3xl font-bold">{{ kpiResults.frequenceMoyenne.toFixed(1) }}×</div>
-            <div class="text-xs mt-2" style="color: rgba(255, 255, 255, 0.9);">Expositions par personne</div>
-          </div>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
-          <div class="p-6 rounded-xl border-2" style="background-color: #FFFFFF; border-color: #E2001A;">
-            <div class="text-sm font-medium mb-1" style="color: #3F3F41;">GRP (Gross Rating Point)</div>
-            <div class="text-2xl font-bold" style="color: #E2001A;">{{ kpiResults.grp.toFixed(1) }}</div>
-            <div class="text-xs mt-1" style="color: #3F3F41;">Couverture × Fréquence</div>
-          </div>
-
-          <div class="p-6 rounded-xl border-2" style="background-color: #FFFFFF; border-color: #E2001A;">
-            <div class="text-sm font-medium mb-1" style="color: #3F3F41;">Impressions Estimées</div>
-            <div class="text-2xl font-bold" style="color: #E2001A;">{{ formatNumber(kpiResults.totalImpressions) }}</div>
-            <div class="text-xs mt-1" style="color: #3F3F41;">Tous supports confondus</div>
-          </div>
-
-          <div class="p-6 rounded-xl border-2" style="background-color: #FFFFFF; border-color: #E2001A;">
-            <div class="text-sm font-medium mb-1" style="color: #3F3F41;">Vues Vidéo Estimées</div>
-            <div class="text-2xl font-bold" style="color: #E2001A;">{{ formatNumber(kpiResults.vuesVideoTotal) }}</div>
-            <div class="text-xs mt-1" style="color: #3F3F41;">Pour pré-roll et vidéos sociales</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- KPI d'Efficacité Financière -->
-      <div>
-        <h3 class="text-lg font-semibold mb-4 flex items-center gap-2" style="color: #3F3F41;">
-          KPI d'Efficacité Financière
-        </h3>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div class="text-white p-6 rounded-xl shadow-lg" style="background: linear-gradient(135deg, #E2001A 0%, #A80013 100%);">
-            <div class="text-sm font-medium mb-1" style="color: rgba(255, 255, 255, 0.9);">Budget Total</div>
-            <div class="text-3xl font-bold">{{ formatCurrency(kpiResults.totalCost) }}</div>
-            <div class="text-xs mt-2" style="color: rgba(255, 255, 255, 0.9);">Investissement publicitaire</div>
-          </div>
-
-          <div class="text-white p-6 rounded-xl shadow-lg" style="background: linear-gradient(135deg, #3F3F41 0%, #1F1F21 100%);">
-            <div class="text-sm font-medium mb-1" style="color: rgba(255, 255, 255, 0.9);">CPM Moyen</div>
-            <div class="text-3xl font-bold">{{ formatCurrency(kpiResults.cpmMoyen) }}</div>
-            <div class="text-xs mt-2" style="color: rgba(255, 255, 255, 0.9);">Coût pour mille impressions</div>
-          </div>
-
-          <div class="text-white p-6 rounded-xl shadow-lg" style="background: linear-gradient(135deg, #E2001A 0%, #8B000E 100%);">
-            <div class="text-sm font-medium mb-1" style="color: rgba(255, 255, 255, 0.9);">Coût GRP</div>
-            <div class="text-3xl font-bold">{{ formatCurrency(kpiResults.coutGRP) }}</div>
-            <div class="text-xs mt-2" style="color: rgba(255, 255, 255, 0.9);">Coût par point de GRP</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- KPI d'Engagement & Action -->
-      <div>
-        <h3 class="text-lg font-semibold mb-4 flex items-center gap-2" style="color: #3F3F41;">
-          KPI d'Engagement & Action
-        </h3>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div class="text-white p-6 rounded-xl shadow-lg" style="background: linear-gradient(135deg, #E2001A 0%, #A80013 100%);">
-            <div class="text-sm font-medium mb-1" style="color: rgba(255, 255, 255, 0.9);">Clics Estimés</div>
-            <div class="text-3xl font-bold">{{ formatNumber(kpiResults.totalClics) }}</div>
-            <div class="text-xs mt-2" style="color: rgba(255, 255, 255, 0.9);">Interactions prévisionnelles</div>
-          </div>
-
-          <div class="text-white p-6 rounded-xl shadow-lg" style="background: linear-gradient(135deg, #3F3F41 0%, #1F1F21 100%);">
-            <div class="text-sm font-medium mb-1" style="color: rgba(255, 255, 255, 0.9);">CTR Moyen Prévisionnel</div>
-            <div class="text-3xl font-bold">{{ kpiResults.ctrMoyen.toFixed(2) }}%</div>
-            <div class="text-xs mt-2" style="color: rgba(255, 255, 255, 0.9);">Taux de clic attendu</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- KPI de Stratégie - Répartition par Support -->
-      <div class="rounded-xl shadow-sm border p-6" style="background-color: #FFFFFF; border-color: #3F3F41;">
-        <h3 class="text-lg font-semibold mb-4 flex items-center gap-2" style="color: #3F3F41;">
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="color: #E2001A;">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z" />
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z" />
-          </svg>
-          KPI de Stratégie - Répartition par Support
-        </h3>
-        
-        <div class="space-y-6">
-          <div v-for="(data, type) in kpiResults.bySupport" :key="type">
-            <div v-if="data.items > 0" class="space-y-3">
-              <div class="flex items-center justify-between">
-                <div class="flex items-center gap-3">
-                  <span 
-                    class="px-3 py-1 text-sm font-semibold rounded-full"
-                    :style="getTypeBadgeStyle(type)"
-                  >
-                    {{ getTypeName(type) }}
-                  </span>
-                  <span class="text-sm" style="color: #3F3F41;">{{ data.items }} insertion(s)</span>
-                </div>
+          <!-- Formulaire d'ajout -->
+          <div v-if="showAddForm" class="p-3 rounded-xl bg-gray-50 border border-gray-200 space-y-2">
+            <div class="grid grid-cols-2 gap-2">
+              <div>
+                <label class="block text-xs text-gray-500 mb-1">Support</label>
+                <select 
+                  v-model="newItem.type"
+                  @change="newItem.format = ''"
+                  class="w-full px-2 py-1.5 text-xs border border-gray-200 rounded-lg bg-white text-cm-dark"
+                >
+                  <option value="print">Print</option>
+                  <option value="digital">Digital</option>
+                  <option value="social">Réseaux Sociaux</option>
+                </select>
               </div>
-
-              <div class="grid grid-cols-2 md:grid-cols-5 gap-4">
-                <!-- Budget -->
-                <div class="p-4 rounded-lg" style="background-color: #E5E7EB;">
-                  <div class="text-xs font-medium mb-1" style="color: #3F3F41;">Budget</div>
-                  <div class="text-lg font-bold" style="color: #3F3F41;">{{ formatCurrency(data.cost) }}</div>
-                  <div class="text-xs mt-1" style="color: #3F3F41;">
-                    {{ formatPercent(kpiResults.repartitionBudget[type]) }}
-                  </div>
-                </div>
-
-                <!-- Impressions -->
-                <div class="p-4 rounded-lg" style="background-color: #E5E7EB;">
-                  <div class="text-xs font-medium mb-1" style="color: #3F3F41;">Impressions</div>
-                  <div class="text-lg font-bold" style="color: #3F3F41;">{{ formatNumber(data.impressions) }}</div>
-                  <div class="text-xs mt-1" style="color: #3F3F41;">
-                    {{ formatPercent(kpiResults.repartitionAudience[type]) }}
-                  </div>
-                </div>
-
-                <!-- CPM -->
-                <div class="p-4 rounded-lg" style="background-color: #E5E7EB;">
-                  <div class="text-xs font-medium mb-1" style="color: #3F3F41;">CPM</div>
-                  <div class="text-lg font-bold" style="color: #3F3F41;">{{ formatCurrency(data.cpm) }}</div>
-                  <div class="text-xs mt-1" style="color: #3F3F41;">Coût/1000</div>
-                </div>
-
-                <!-- Clics -->
-                <div class="p-4 rounded-lg" style="background-color: #E5E7EB;">
-                  <div class="text-xs font-medium mb-1" style="color: #3F3F41;">Clics estimés</div>
-                  <div class="text-lg font-bold" style="color: #3F3F41;">{{ formatNumber(data.clics) }}</div>
-                  <div class="text-xs mt-1" style="color: #3F3F41;">
-                    {{ ((data.clics / kpiResults.totalClics) * 100).toFixed(1) }}%
-                  </div>
-                </div>
-
-                <!-- Part du total -->
-                <div class="p-4 rounded-lg" style="background-color: #E5E7EB;">
-                  <div class="text-xs font-medium mb-1" style="color: #3F3F41;">Part du total</div>
-                  <div class="text-lg font-bold" style="color: #3F3F41;">
-                    {{ formatPercent((data.cost / kpiResults.totalCost) * 100) }} 
-                  </div>
-                  <div class="text-xs mt-1" style="color: #3F3F41;">Budget</div>
-                </div>
+              <div>
+                <label class="block text-xs text-gray-500 mb-1">Format</label>
+                <select 
+                  v-model="newItem.format"
+                  class="w-full px-2 py-1.5 text-xs border border-gray-200 rounded-lg bg-white text-cm-dark"
+                >
+                  <option value="">Sélectionner...</option>
+                  <option v-for="format in formats[newItem.type]" :key="format.id" :value="format.id">
+                    {{ format.name }}
+                  </option>
+                </select>
               </div>
-
-              <!-- Barres de progression -->
-              <div class="space-y-2">
-                <div>
-                  <div class="flex justify-between text-xs mb-1" style="color: #3F3F41;">
-                    <span>Répartition budget</span>
-                    <span>{{ formatPercent(kpiResults.repartitionBudget[type]) }}</span>
-                  </div>
-                  <div class="w-full rounded-full h-2" style="background-color: #E5E7EB;">
-                    <div 
-                      class="h-2 rounded-full transition-all duration-500"
-                      :style="{ width: `${kpiResults.repartitionBudget[type]}%`, 'background-color': '#E2001A' }"
-                    ></div>
-                  </div>
-                </div>
-
-                <div>
-                  <div class="flex justify-between text-xs mb-1" style="color: #3F3F41;">
-                    <span>Répartition audience</span>
-                    <span>{{ formatPercent(kpiResults.repartitionAudience[type]) }}</span>
-                  </div>
-                  <div class="w-full rounded-full h-2" style="background-color: #E5E7EB;">
-                    <div 
-                      class="h-2 rounded-full transition-all duration-500"
-                      :style="{ width: `${kpiResults.repartitionAudience[type]}%`, 'background-color': '#E2001A' }"
-                    ></div>
-                  </div>
-                </div>
+              <div>
+                <label class="block text-xs text-gray-500 mb-1">Quantité</label>
+                <input 
+                  v-model.number="newItem.quantity"
+                  type="number"
+                  min="1"
+                  class="w-full px-2 py-1.5 text-xs border border-gray-200 rounded-lg bg-white text-cm-dark"
+                />
+              </div>
+              <div>
+                <label class="block text-xs text-gray-500 mb-1">CPM</label>
+                <input 
+                  v-model.number="newItem.customPrice"
+                  type="number"
+                  step="0.01"
+                  placeholder="Défaut"
+                  class="w-full px-2 py-1.5 text-xs border border-gray-200 rounded-lg bg-white text-cm-dark"
+                />
               </div>
             </div>
-            <div v-if="type !== 'social' || kpiResults.bySupport.social.items > 0" class="my-4" style="border-bottom: 1px solid #3F3F41;"></div>
+            <div class="flex gap-2">
+              <button 
+                @click="addMediaItem"
+                :disabled="!newItem.format"
+                class="flex-1 px-3 py-1.5 text-xs text-white rounded-lg disabled:opacity-50 bg-cm-red"
+              >
+                Ajouter
+              </button>
+              <button 
+                @click="showAddForm = false"
+                class="px-3 py-1.5 text-xs rounded-lg bg-gray-200 text-cm-dark"
+              >
+                Annuler
+              </button>
+            </div>
           </div>
-        </div>
-      </div>
 
-      <!-- Plan Média Proposé (Budget détaillé) -->
-      <div class="rounded-xl shadow-sm border p-6" style="background-color: #FFFFFF; border-color: #3F3F41;">
-        <h3 class="text-lg font-semibold mb-4 flex items-center gap-2" style="color: #3F3F41;">
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="color: #E2001A;">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-          </svg>
-          Plan Média Proposé - Budget Détaillé
-        </h3>
+          <!-- Liste des insertions -->
+          <div v-if="mediaItems.length === 0" class="text-center py-6 rounded-xl border-2 border-dashed border-gray-200 bg-gray-50">
+            <svg class="w-8 h-8 mx-auto mb-2 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+            </svg>
+            <p class="text-xs text-gray-400">Aucune insertion</p>
+          </div>
 
-        <div class="overflow-x-auto">
-          <table class="w-full text-sm">
-            <thead class="border-b-2" style="background-color: #E5E7EB; border-color: #3F3F41;">
-              <tr>
-                <th class="px-4 py-3 text-left font-semibold" style="color: #3F3F41;">Support</th>
-                <th class="px-4 py-3 text-left font-semibold" style="color: #3F3F41;">Format</th>
-                <th class="px-4 py-3 text-center font-semibold" style="color: #3F3F41;">Quantité</th>
-                <th class="px-4 py-3 text-right font-semibold" style="color: #3F3F41;">CPM</th>
-                <th class="px-4 py-3 text-right font-semibold" style="color: #3F3F41;">Impressions</th>
-                <th class="px-4 py-3 text-right font-semibold" style="color: #3F3F41;">Coût</th>
-              </tr>
-            </thead>
-            <tbody class="divide-y" style="border-color: #E5E7EB;">
-              <tr v-for="item in mediaItems" :key="item.id" style="background-color: #FFFFFF;">
-                <td class="px-4 py-3">
-                  <span 
-                    class="px-2 py-1 text-xs font-medium rounded-full"
-                    :style="getTypeBadgeStyle(item.type)"
-                  >
+          <div v-else class="space-y-1.5">
+            <div 
+              v-for="item in mediaItems" 
+              :key="item.id"
+              class="flex items-center justify-between p-2 rounded-lg bg-gray-50 hover:bg-gray-100 transition-colors text-xs"
+            >
+              <div class="flex-1 min-w-0">
+                <div class="flex items-center gap-1.5">
+                  <span :class="['px-1.5 py-0.5 text-[10px] font-semibold rounded-full', getTypeBadgeClass(item.type)]">
                     {{ getTypeName(item.type) }}
                   </span>
-                </td>
-                <td class="px-4 py-3 font-medium" style="color: #3F3F41;">{{ item.formatName }}</td>
-                <td class="px-4 py-3 text-center" style="color: #3F3F41;">{{ item.quantity }}</td>
-                <td class="px-4 py-3 text-right" style="color: #3F3F41;">
-                  {{ formatCurrency(item.customPrice || item.baseCPM) }}
-                </td>
-                <td class="px-4 py-3 text-right" style="color: #3F3F41;">
-                  {{ formatNumber(item.baseImpressions * item.quantity) }}
-                </td>
-                <td class="px-4 py-3 text-right font-semibold" style="color: #3F3F41;">
+                  <span class="font-medium text-cm-dark truncate">{{ item.formatName }}</span>
+                  <span class="text-gray-400">×{{ item.quantity }}</span>
+                </div>
+                <div class="text-[10px] text-gray-400 mt-0.5">
                   {{ formatCurrency(((item.baseImpressions * item.quantity) / 1000) * (item.customPrice || item.baseCPM)) }}
-                </td>
-              </tr>
-            </tbody>
-            <tfoot class="border-t-2" style="background-color: #E5E7EB; border-color: #3F3F41;">
-              <tr>
-                <td colspan="4" class="px-4 py-3 text-right font-bold" style="color: #3F3F41;">TOTAL</td>
-                <td class="px-4 py-3 text-right font-bold" style="color: #E2001A;">
-                  {{ formatNumber(kpiResults.totalImpressions) }}
-                </td>
-                <td class="px-4 py-3 text-right font-bold" style="color: #E2001A;">
-                  {{ formatCurrency(kpiResults.totalCost) }}
-                </td>
-              </tr>
-            </tfoot>
-          </table>
+                </div>
+              </div>
+              <button 
+                @click="removeItem(item.id)"
+                class="p-1 rounded text-gray-300 hover:text-cm-red hover:bg-red-50"
+              >
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Footer avec total -->
+        <div v-if="kpiResults" class="px-3 md:px-4 py-2 md:py-3 border-t border-gray-100 bg-gray-50 flex-shrink-0">
+          <div class="flex justify-between items-center text-sm">
+            <span class="text-gray-500">Budget total</span>
+            <span class="font-bold text-cm-red">{{ formatCurrency(kpiResults.totalCost) }}</span>
+          </div>
         </div>
       </div>
+    </div>
 
-      <!-- Bouton export -->
-      <div class="flex justify-end">
-        <button 
-          @click="exportResults"
-          class="px-6 py-3 text-white rounded-lg hover:opacity-90 transition-colors flex items-center gap-2 shadow-lg"
-          style="background-color: #E2001A;"
-        >
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M9 19l3 3m0 0l3-3m-3 3V10" />
-          </svg>
-          Exporter en PDF
-        </button>
+    <!-- Panneau droit : Résultats KPI -->
+    <div class="w-full md:w-1/2 flex flex-col min-h-0">
+      <div class="bg-white rounded-xl md:rounded-2xl shadow-lg flex-1 flex flex-col overflow-hidden">
+        <!-- Header -->
+        <div class="px-4 md:px-6 py-2 md:py-3 bg-cm-dark text-white flex-shrink-0 rounded-t-xl md:rounded-t-2xl">
+          <h2 class="text-base md:text-lg font-semibold">Indicateurs KPI</h2>
+        </div>
+
+        <!-- Contenu -->
+        <div v-if="!kpiResults" class="flex-1 flex items-center justify-center">
+          <div class="text-center p-8">
+            <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-gray-100 flex items-center justify-center">
+              <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+              </svg>
+            </div>
+            <h3 class="text-lg font-semibold text-gray-700 mb-2">KPI en attente</h3>
+            <p class="text-sm text-gray-500">Ajoutez des insertions pour voir les indicateurs</p>
+          </div>
+        </div>
+
+        <div v-else class="flex-1 overflow-auto p-3 md:p-4 space-y-5">
+          <!-- KPI Impact & Exposition -->
+          <div>
+            <h4 class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-3 flex items-center gap-2">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+              </svg>
+              Impact & Exposition
+            </h4>
+            <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
+              <div class="p-4 rounded-xl bg-red-50">
+                <p class="text-xs text-gray-500 uppercase mb-1">Audience</p>
+                <p class="text-2xl font-bold text-cm-red">{{ formatNumber(kpiResults.audienceCumuleeDedupliquee) }}</p>
+              </div>
+              <div class="p-4 rounded-xl bg-gray-50">
+                <p class="text-xs text-gray-500 uppercase mb-1">Couverture</p>
+                <p class="text-2xl font-bold text-cm-dark">{{ formatPercent(kpiResults.tauxCouverture) }}</p>
+              </div>
+              <div class="p-4 rounded-xl bg-red-50">
+                <p class="text-xs text-gray-500 uppercase mb-1">Fréquence</p>
+                <p class="text-2xl font-bold text-cm-red">{{ kpiResults.frequenceMoyenne.toFixed(1) }}×</p>
+              </div>
+              <div class="p-4 rounded-xl bg-gray-50">
+                <p class="text-xs text-gray-500 uppercase mb-1">GRP</p>
+                <p class="text-2xl font-bold text-cm-dark">{{ kpiResults.grp.toFixed(1) }}</p>
+              </div>
+              <div class="p-4 rounded-xl bg-red-50">
+                <p class="text-xs text-gray-500 uppercase mb-1">Impressions</p>
+                <p class="text-2xl font-bold text-cm-red">{{ formatNumber(kpiResults.totalImpressions) }}</p>
+              </div>
+              <div class="p-4 rounded-xl bg-gray-50">
+                <p class="text-xs text-gray-500 uppercase mb-1">Vues Vidéo</p>
+                <p class="text-2xl font-bold text-cm-dark">{{ formatNumber(kpiResults.vuesVideoTotal) }}</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- KPI Financier -->
+          <div>
+            <h4 class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-3 flex items-center gap-2">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              Efficacité Financière
+            </h4>
+            <div class="grid grid-cols-2 gap-3">
+              <div class="p-4 rounded-xl bg-red-50">
+                <p class="text-xs text-gray-500 uppercase mb-1">Budget</p>
+                <p class="text-2xl font-bold text-cm-red">{{ formatCurrency(kpiResults.totalCost) }}</p>
+              </div>
+              <div class="p-4 rounded-xl bg-gray-50">
+                <p class="text-xs text-gray-500 uppercase mb-1">CPM Moyen</p>
+                <p class="text-2xl font-bold text-cm-dark">{{ formatCurrency(kpiResults.cpmMoyen) }}</p>
+              </div>
+              <div class="p-4 rounded-xl bg-red-50">
+                <p class="text-xs text-gray-500 uppercase mb-1">Coût GRP</p>
+                <p class="text-2xl font-bold text-cm-red">{{ formatCurrency(kpiResults.coutGRP) }}</p>
+              </div>
+              <div class="p-4 rounded-xl bg-gray-50">
+                <p class="text-xs text-gray-500 uppercase mb-1">Clics</p>
+                <p class="text-2xl font-bold text-cm-dark">{{ formatNumber(kpiResults.totalClics) }}</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Répartition par Support -->
+          <div>
+            <h4 class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-3 flex items-center gap-2">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z" />
+              </svg>
+              Répartition par Support
+            </h4>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+              <template v-for="(data, type) in kpiResults.bySupport" :key="type">
+                <div v-if="data.items > 0" class="p-4 rounded-xl bg-gray-50">
+                  <div class="flex items-center justify-between mb-3">
+                    <span :class="['px-2.5 py-1 text-xs font-semibold rounded-full', getTypeBadgeClass(type)]">
+                      {{ getTypeName(type) }}
+                    </span>
+                    <span class="text-lg font-bold text-cm-dark">{{ formatCurrency(data.cost) }}</span>
+                  </div>
+                  <div class="grid grid-cols-2 gap-2 text-xs mb-3">
+                    <div>
+                      <span class="text-gray-400">Impressions</span>
+                      <p class="font-semibold text-cm-dark text-base">{{ formatNumber(data.impressions) }}</p>
+                    </div>
+                    <div>
+                      <span class="text-gray-400">Part</span>
+                      <p class="font-semibold text-cm-red text-base">{{ formatPercent(kpiResults.repartitionBudget[type]) }}</p>
+                    </div>
+                  </div>
+                  <div class="w-full rounded-full h-2 bg-gray-200">
+                    <div class="h-2 rounded-full bg-cm-red transition-all" :style="{ width: `${kpiResults.repartitionBudget[type]}%` }"></div>
+                  </div>
+                </div>
+              </template>
+            </div>
+          </div>
+
+          <!-- Tableau récapitulatif -->
+          <div class="flex-1">
+            <h4 class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-3 flex items-center gap-2">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+              </svg>
+              Détail du Plan
+            </h4>
+            <div class="overflow-x-auto rounded-xl border border-gray-100">
+              <table class="w-full text-sm">
+                <thead class="bg-gray-50">
+                  <tr>
+                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Support</th>
+                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Format</th>
+                    <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase">Qté</th>
+                    <th class="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase">Coût</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-100">
+                  <tr v-for="item in mediaItems" :key="item.id" class="hover:bg-gray-50">
+                    <td class="px-4 py-3">
+                      <span :class="['px-2 py-1 text-xs font-semibold rounded-full', getTypeBadgeClass(item.type)]">
+                        {{ getTypeName(item.type) }}
+                      </span>
+                    </td>
+                    <td class="px-4 py-3 font-medium text-cm-dark">{{ item.formatName }}</td>
+                    <td class="px-4 py-3 text-center text-gray-500">{{ item.quantity }}</td>
+                    <td class="px-4 py-3 text-right font-semibold text-cm-dark">
+                      {{ formatCurrency(((item.baseImpressions * item.quantity) / 1000) * (item.customPrice || item.baseCPM)) }}
+                    </td>
+                  </tr>
+                </tbody>
+                <tfoot class="bg-gray-50 border-t-2 border-gray-200">
+                  <tr>
+                    <td colspan="3" class="px-4 py-3 text-right font-bold text-cm-dark">TOTAL</td>
+                    <td class="px-4 py-3 text-right font-bold text-cm-red text-lg">{{ formatCurrency(kpiResults.totalCost) }}</td>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- Footer avec bouton export -->
+        <div v-if="kpiResults" class="px-3 md:px-4 py-2 md:py-3 border-t border-gray-100 flex-shrink-0 flex justify-end">
+          <button 
+            @click="exportResults"
+            class="px-4 py-2 text-sm text-white rounded-lg hover:opacity-90 transition-all flex items-center gap-2 bg-cm-red"
+          >
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M9 19l3 3m0 0l3-3m-3 3V10" />
+            </svg>
+            Exporter PDF
+          </button>
+        </div>
       </div>
     </div>
   </div>
