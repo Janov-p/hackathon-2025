@@ -1,0 +1,1229 @@
+{
+  "metadata": {
+    "fichier": "TARIFS CMP 2025 X HACKATHON.xlsx",
+    "annee": "2025",
+    "date_extraction": "2025-12-11"
+  },
+  "feuilles": {
+    "TITRE": {
+      "contenu": {
+        "ligne_48": {
+          "colonne_B": "TARIFS  2025"
+        }
+      }
+    },
+    "PRIVILEGE_CM": {
+      "gamme": "GAMME PRIVILEGE - QUADRICHROMIE",
+      "sections": {
+        "page_une": {
+          "modules": {
+            "module_1": {
+              "description": "Module 1 90 H x 92 L",
+              "tarif_semaine": 1100,
+              "tarif_samedi": 1300
+            },
+            "module_2": {
+              "description": "Module 2 90 H x 185 L",
+              "tarif_semaine": 2100,
+              "tarif_samedi": 2500
+            },
+            "exclusivite_page_une": {
+              "description": "Exclusivité de Page Une 90 H x 280 L",
+              "tarif_semaine": 2900,
+              "tarif_samedi": 3500
+            }
+          },
+          "manchette_corse_matin": {
+            "description": "A droite ou à gauche du Titre 55 mm H x 110 mm L",
+            "tarif_semaine": 700,
+            "tarif_samedi": 900
+          },
+          "une_evenement": {
+            "description": "Manchettes + Bas de page + DER + Habillage HP",
+            "tarif_semaine": 10000,
+            "tarif_samedi": 13000
+          },
+          "exclu_de_page_une": {
+            "description": "Manchettes + Bas de page + Web",
+            "tarif_semaine": 4500,
+            "tarif_samedi": 6000
+          }
+        },
+        "page_deux": {
+          "manchette_droite": {
+            "description": "Manchette Droite 56 mm H x 90 mm L",
+            "tarif_semaine": 350,
+            "tarif_samedi": 400
+          },
+          "module_pied_de_page": {
+            "description": "Module Pied de Page 90 H x 280 L",
+            "tarif_semaine": 2000,
+            "tarif_samedi": 2200
+          }
+        },
+        "page_trois": {
+          "hauteur_module": "159 mm",
+          "modules": {
+            "un_huitieme": {
+              "description": "1/8 Page 159 H x 90 L",
+              "tarif_semaine": 1100,
+              "tarif_samedi": 1200
+            },
+            "un_quart": {
+              "description": "1/4 Page 159 H x 185 L",
+              "tarif_semaine": 1900,
+              "tarif_samedi": 2400
+            },
+            "un_tiers": {
+              "description": "1/3 Page 159 H x 280 L",
+              "tarif_semaine": 2800,
+              "tarif_samedi": 3500
+            },
+            "exclusivite_page_3": {
+              "description": "1/2 Page 212 H x 280 L",
+              "tarif_semaine": 4800,
+              "tarif_samedi_formule": "=H29*1.25"
+            }
+          }
+        },
+        "pages_programmes_tv": {
+          "bandeau_pied_de_page": {
+            "description": "90 H x 280 L",
+            "tarif_semaine": 600,
+            "tarif_samedi_formule": "=H32*1.25"
+          }
+        },
+        "pages_meteo": {
+          "bandeau_pied_de_page": {
+            "description": "110 H x 280 L",
+            "tarif_semaine": 650,
+            "tarif_samedi": 800
+          }
+        },
+        "panoramique": {
+          "au_centre_du_journal": {
+            "description": "2 Pages en Vis-à-vis au Centre du Journal H 430 x L 590",
+            "tarif_semaine": 9850,
+            "tarif_samedi": 12000
+          },
+          "au_fil_des_pages": {
+            "description": "2 Pages en Vis-à-vis au fil des Pages",
+            "tarif_semaine": 7600,
+            "tarif_samedi": 9000
+          }
+        },
+        "derniere_page": {
+          "pleine_page_quadri": {
+            "description": "Pleine Page Quadri 430 H x 280 L",
+            "tarif_semaine": 8000,
+            "tarif_samedi_formule": "=H42*1.25"
+          },
+          "demi_page_quadri": {
+            "description": "1/2 Page Quadri 212 H x 280 L",
+            "tarif_semaine": 4100,
+            "tarif_samedi": 5100
+          }
+        },
+        "cahier_local_ajaccio_bastia": {
+          "manchette_droite_simple": {
+            "description": "Manchette Droite Simple 56 mm H x 90 mm L",
+            "tarif_semaine": 290,
+            "tarif_samedi": 350
+          },
+          "bandeau_pied_de_page": {
+            "description": "Bandeau Pied de Page 130,5 mm H x 280 mm L",
+            "tarif_semaine": 1800,
+            "tarif_samedi": 2200
+          },
+          "bandeau_panoramique": {
+            "description": "Bandeau Panoramique 109 mm H x 590 mm L",
+            "tarif_semaine": 3100,
+            "tarif_samedi": 3500
+          }
+        },
+        "cahier_local_autres_localites": {
+          "localites": "Corte, Sartène, Plaine Orientale, Calvi, Porto-Vecchio",
+          "manchette_droite_simple": {
+            "description": "Manchette Droite Simple 56 mm H x 90 mm L",
+            "tarif_semaine": 220,
+            "tarif_samedi": 280
+          }
+        },
+        "cahier_sports": {
+          "manchette_droite_simple": {
+            "description": "Manchette Droite Simple 56 mm H x 90 mm L",
+            "tarif_semaine": 290,
+            "tarif_samedi": 350
+          },
+          "bandeau_pied_de_page": {
+            "description": "Bandeau Pied de Page 130,5 mm H x 280 mm L",
+            "tarif_semaine": 1500,
+            "tarif_samedi_formule": "=H58*1.3"
+          }
+        }
+      },
+      "remises": {
+        "remise_ca": {},
+        "remise_accelerateur": {},
+        "remise_couplage": {}
+      }
+    },
+    "BI_MEDIA": {
+      "gamme": "GAMME PRIVILEGE - QUADRICHROMIE",
+      "web_inclus": "WEB Megabanner ou Pavé HP+RG 30000 PAP",
+      "sections": {
+        "page_une": {
+          "exclusivite_page_une": {
+            "description": "Exclusivité de Page Une 90 H x 280 L",
+            "tarif_semaine": 3200,
+            "tarif_samedi": 3800
+          },
+          "manchette_corse_matin": {
+            "description": "A droite ou à gauche du Titre 55 mm H x 110 mm L",
+            "tarif_semaine": 1000,
+            "tarif_samedi": 1200
+          },
+          "une_evenement": {
+            "description": "Manchettes + Bas de page + DER + Habillage HP",
+            "tarif_semaine": 10300,
+            "tarif_samedi": 13300
+          },
+          "exclu_de_page_une": {
+            "description": "Manchettes + Bas de page + Web",
+            "tarif_semaine": 4800,
+            "tarif_samedi": 6300
+          }
+        },
+        "page_deux": {
+          "module_pied_de_page": {
+            "description": "Module Pied de Page 1/3 Page 90 H x 280 L",
+            "tarif_semaine": 2300,
+            "tarif_samedi": 2500
+          }
+        },
+        "page_trois": {
+          "hauteur_module": "159 mm",
+          "un_tiers_page": {
+            "description": "1/3 Page 159 H x 280 L",
+            "tarif_semaine": 3100,
+            "tarif_samedi": 3800
+          },
+          "exclusivite_page_3": {
+            "description": "1/2 Page 212 H x 280 L",
+            "tarif_semaine": 5100,
+            "tarif_samedi": 6300
+          }
+        },
+        "panoramique": {
+          "au_centre_du_journal": {
+            "description": "2 Pages en Vis-à-vis au Centre du Journal H 430 x L 590",
+            "tarif_semaine": 10150,
+            "tarif_samedi": 12300
+          },
+          "au_fil_des_pages": {
+            "description": "2 Pages en Vis-à-vis au fil des Pages",
+            "tarif_semaine": 7900,
+            "tarif_samedi": 9300
+          }
+        },
+        "derniere_page": {
+          "demi_page_quadri": {
+            "description": "1/2 Page Quadri 212 H x 280 L",
+            "tarif_semaine": 4400,
+            "tarif_samedi": 5400
+          },
+          "pleine_page_quadri": {
+            "description": "1 Page Quadri 430 H x 280 L",
+            "tarif_semaine": 8300,
+            "tarif_samedi": 10300
+          }
+        },
+        "cahier_local_ajaccio_bastia": {
+          "bandeau_pied_de_page": {
+            "description": "Bandeau Pied de Page 130,5 mm H x 280 mm L",
+            "tarif_semaine": 2100,
+            "tarif_samedi": 2500
+          },
+          "bandeau_panoramique": {
+            "description": "Bandeau Panoramique 109 mm H x 590 mm L",
+            "tarif_semaine": 3400,
+            "tarif_samedi": 3800
+          }
+        },
+        "cahier_sports": {
+          "bandeau_pied_de_page": {
+            "description": "Bandeau Pied de Page 130,5 mm H x 280 mm L",
+            "tarif_semaine": 1800,
+            "tarif_samedi_formule": "=H41*1.3"
+          }
+        }
+      },
+      "note_importante": "Attention, le tarif bi-média doit être impérativement proposé pour tout nouveau client",
+      "remises": {
+        "remise_ca": {},
+        "remise_accelerateur": {},
+        "remise_couplage": {}
+      }
+    },
+    "PERF_CORSE_MATIN": {
+      "gamme": "GAMME PERFORMANCE",
+      "sections": {
+        "corse_info": {
+          "emplacement": "Pages CORSE INFO (à partir de la P4)",
+          "formats": {
+            "un_huitieme": {
+              "format_1": "102 H x 90 L",
+              "format_2": "159 H x 90 L ou 74 H x 185 L",
+              "tarif_semaine": 1000,
+              "tarif_samedi": 1100
+            },
+            "un_sixieme": {
+              "format": "212 H x 90 L",
+              "tarif_semaine": 1300,
+              "tarif_samedi": 1400
+            },
+            "un_quart": {
+              "formats": [
+                "159 H x 185 L",
+                "212 H x 137,5 L",
+                "130 H x 280 L"
+              ],
+              "tarif_semaine": 1900,
+              "tarif_samedi": 2100
+            },
+            "un_tiers": {
+              "formats": [
+                "430 H x 90 L",
+                "159 H x 280 L"
+              ],
+              "tarif_semaine": 2500,
+              "tarif_samedi": 2700
+            },
+            "junior_page": {
+              "format": "280 H x 185 L",
+              "tarif_semaine": 3300,
+              "tarif_samedi": 3600
+            },
+            "demi_page": {
+              "formats": [
+                "212 H x 280 L",
+                "430H x 137,5 L"
+              ],
+              "tarif_semaine": 3500,
+              "tarif_samedi": 3800
+            },
+            "page_complete": {
+              "format": "430 H x 280 L",
+              "tarif_semaine": 7000,
+              "tarif_samedi": 7600
+            }
+          },
+          "sports": {
+            "format_102x90": {
+              "tarif_semaine": 400,
+              "tarif_samedi": 440
+            },
+            "un_huitieme": {
+              "tarif_semaine": 600,
+              "tarif_samedi": 660
+            },
+            "un_sixieme": {
+              "tarif_semaine": 800,
+              "tarif_samedi": 880
+            },
+            "un_quart": {
+              "tarif_semaine": 1200,
+              "tarif_samedi": 1320
+            },
+            "un_tiers": {
+              "tarif_semaine": 1600,
+              "tarif_samedi": 1760
+            },
+            "junior_page": {
+              "tarif_semaine": 2400,
+              "tarif_samedi": 2640
+            },
+            "demi_page": {
+              "tarif_semaine": 2300,
+              "tarif_samedi": 2530
+            },
+            "page_complete": {
+              "tarif_semaine": 4400,
+              "tarif_samedi": 4840
+            }
+          }
+        },
+        "pages_locales": {
+          "note_attention": "ATTENTION : Seulement 5 TYPES DE MODULES EN PAGES LOCALES / IDEM PAGES LOCALES AM ET VAR AVEC MEMES DEGRESSIFS",
+          "nouvelle_grille": "Nouvelle Grille de Dégressif / Nouvelles Offres A créer ?",
+          "note_quart_page": "N.B. : 1/4 Page : Rajout du format 96 h x 6 col (ex 1/4 Plus)",
+          "augmentations": {
+            "corse_info": "+32% semaine, +31% samedi",
+            "sports": "+25% semaine, +25% samedi"
+          },
+          "formats": {
+            "un_seizieme": {
+              "format": "46 H x 90 L",
+              "tarif_semaine": 250,
+              "tarif_samedi": 275,
+              "tarif_semaine_sports": 200,
+              "tarif_samedi_sports": 220
+            },
+            "module_3": {
+              "format": "102 H x 90 L",
+              "tarif_semaine": 500,
+              "tarif_samedi": 550,
+              "tarif_semaine_sports": 400,
+              "tarif_samedi_sports": 440
+            },
+            "un_huitieme": {
+              "format": "159 H x 90 L ou 74 H x 185 L",
+              "tarif_semaine": 750,
+              "tarif_samedi": 830,
+              "tarif_semaine_sports": 600,
+              "tarif_samedi_sports": 660
+            },
+            "un_sixieme": {
+              "format": "212 H x 90 L",
+              "tarif_semaine": 1000,
+              "tarif_samedi": 1100,
+              "tarif_semaine_sports": 800,
+              "tarif_samedi_sports": 880
+            },
+            "un_quart_page": {
+              "formats": [
+                "159 H x 185 L",
+                "212 H x 137,5 L",
+                "130 H x 280 L"
+              ],
+              "tarif_semaine": 1500,
+              "tarif_samedi": 1650,
+              "tarif_semaine_sports": 1200,
+              "tarif_samedi_sports": 1320
+            },
+            "un_tiers_page_hauteur": {
+              "formats": [
+                "430 H x 90 L",
+                "159 H x 280 L"
+              ],
+              "tarif_semaine": 2000,
+              "tarif_samedi": 2200,
+              "tarif_semaine_sports": 1600,
+              "tarif_samedi_sports": 1760
+            },
+            "junior_page": {
+              "format": "280 H x 185 L",
+              "tarif_semaine": 3000,
+              "tarif_samedi": 3300,
+              "tarif_semaine_sports": 2400,
+              "tarif_samedi_sports": 2640
+            },
+            "demi_page": {
+              "formats": [
+                "212 H x 280 L",
+                "430H x 137,5 L"
+              ],
+              "tarif_semaine": 2900,
+              "tarif_samedi": 3200,
+              "tarif_semaine_sports": 2300,
+              "tarif_samedi_sports": 2530
+            },
+            "page_complete": {
+              "format": "430 H x 280 L",
+              "tarif_semaine": 5500,
+              "tarif_samedi": 6000,
+              "tarif_semaine_sports": 4400,
+              "tarif_samedi_sports": 4840
+            }
+          }
+        }
+      }
+    },
+    "PACK_PROXI_CORSE": {
+      "gamme": "GAMME PROXI METIERS",
+      "type": "LES PROXI PACKS",
+      "emplacement": "Pages Locales sans Emplacement de Rigueur - Tarif Par Edition",
+      "delai": "Parutions sur un délai de 15 Jours Maximum",
+      "note_client": "Attention typologie de clients éligibles à ces tarifs à respecter (Voir polCo)",
+      "localites": {
+        "ajaccio": "AJACCIO",
+        "autres_localites": "AUTRES LOCALITES"
+      },
+      "augmentation_quadri": "Quadri : + 25 %",
+      "pack_3_parutions": {
+        "delai": "3 parutions en 15 jours max",
+        "formats": {
+          "format_46h_90l": {
+            "description": "46 h x 90 l",
+            "nbre_bases": 4,
+            "ajaccio_quadri": 400,
+            "autres_localites_quadri": 350
+          },
+          "format_74h_90l": {
+            "description": "74 h x 90 l",
+            "nbre_bases": 6,
+            "ajaccio_quadri_formule": "=$E$22*A23",
+            "autres_localites_quadri_formule": "=$G$22*A23"
+          },
+          "format_102h_90l": {
+            "description": "102 h x 90 l",
+            "nbre_bases": 8,
+            "ajaccio_quadri_formule": "=$E$22*A24",
+            "autres_localites_quadri_formule": "=$G$22*A24"
+          },
+          "format_159h_90l": {
+            "description": "159 h x 90 l",
+            "nbre_bases": 12,
+            "ajaccio_quadri_formule": "=$E$22*A25",
+            "autres_localites_quadri_formule": "=$G$22*A25"
+          }
+        }
+      },
+      "pack_5_parutions": {
+        "delai": "5 parutions en 15 jours max",
+        "formats": {
+          "format_46h_90l": {
+            "description": "46 h x 90 l",
+            "nbre_bases": 4,
+            "ajaccio_quadri": 600,
+            "autres_localites_quadri": 530
+          },
+          "format_74h_90l": {
+            "description": "74 h x 90 l",
+            "nbre_bases": 6,
+            "ajaccio_quadri_formule": "=$E$30*A31",
+            "autres_localites_quadri": 800
+          },
+          "format_102h_90l": {
+            "description": "102 h x 90 l",
+            "nbre_bases": 8,
+            "ajaccio_quadri_formule": "=$E$30*A32",
+            "autres_localites_quadri": 1100
+          },
+          "format_159h_90l": {
+            "description": "159 h x 90 l",
+            "nbre_bases": 12,
+            "ajaccio_quadri_formule": "=$E$30*A33",
+            "autres_localites_quadri": 1600
+          }
+        }
+      },
+      "pack_7_parutions": {
+        "delai": "7 parutions en 15 jours max",
+        "formats": {
+          "format_46h_90l": {
+            "description": "46 h x 90 l",
+            "nbre_bases": 4,
+            "ajaccio_quadri": 800,
+            "autres_localites_quadri": 700
+          },
+          "format_74h_90l": {
+            "description": "74 h x 90 l",
+            "nbre_bases": 6,
+            "ajaccio_quadri_formule": "=$E$38*A39",
+            "autres_localites_quadri_formule": "=$G$38*A39"
+          },
+          "format_102h_90l": {
+            "description": "102 h x 90 l",
+            "nbre_bases": 8,
+            "ajaccio_quadri_formule": "=$E$38*A40",
+            "autres_localites_quadri_formule": "=$G$38*A40"
+          },
+          "format_159h_90l": {
+            "description": "159 h x 90 l",
+            "nbre_bases": 12,
+            "ajaccio_quadri_formule": "=$E$38*A41",
+            "autres_localites_quadri_formule": "=$G$38*A41"
+          }
+        }
+      },
+      "tarifs_reference": "TARIFS  2019 / 2020",
+      "remise": "AUCUNE REMISE APPLICABLE"
+    },
+    "PACK_PROXI_BI_MEDIA": {
+      "gamme": "GAMME PROXI METIERS",
+      "type": "LES PROXI PACKS",
+      "emplacement": "Pages Locales sans Emplacement de Rigueur - Tarif Par Edition",
+      "delai": "Parutions sur un délai de 15 Jours Maximum",
+      "web_inclus": "1 semaine de présence sur le site corsematin.com en page locale 10000 PAP",
+      "localites": {
+        "ajaccio": "AJACCIO",
+        "autres_localites": "AUTRES LOCALITES"
+      },
+      "augmentation_quadri": "Quadri : + 25 %",
+      "coefficient_unite": {
+        "description": "Unité = 1 base (16 h x 1 col)",
+        "valeur_ajaccio": 40.70175438596491,
+        "valeur_autres": 34.80701754385965
+      },
+      "pack_1_parution": {
+        "description": "La Parution",
+        "formats": {
+          "format_46h_90l": {
+            "description": "46 h x 90 l",
+            "nbre_bases": 4,
+            "ajaccio_quadri": 500,
+            "autres_localites_quadri": 450
+          },
+          "format_74h_90l": {
+            "description": "74 h x 90 l",
+            "nbre_bases": 6,
+            "ajaccio_quadri": 700,
+            "autres_localites_quadri": 625
+          },
+          "format_102h_90l": {
+            "description": "102 h x 90 l",
+            "nbre_bases": 8,
+            "ajaccio_quadri": 900,
+            "autres_localites_quadri": 800
+          },
+          "format_159h_90l": {
+            "description": "159 h x 90 l",
+            "nbre_bases": 12,
+            "ajaccio_quadri": 1300,
+            "autres_localites_quadri": 1150
+          }
+        }
+      },
+      "pack_3_parutions": {
+        "formats": {
+          "format_46h_90l": {
+            "description": "46 h x 90 l",
+            "nbre_bases": 4,
+            "ajaccio_quadri": 700,
+            "autres_localites_quadri": 630
+          },
+          "format_74h_90l": {
+            "description": "74 h x 90 l",
+            "nbre_bases": 6,
+            "ajaccio_quadri": 1000,
+            "autres_localites_quadri": 900
+          },
+          "format_102h_90l": {
+            "description": "102 h x 90 l",
+            "nbre_bases": 8,
+            "ajaccio_quadri": 1300,
+            "autres_localites_quadri": 1200
+          },
+          "format_159h_90l": {
+            "description": "159 h x 90 l",
+            "nbre_bases": 12,
+            "ajaccio_quadri": 1900,
+            "autres_localites_quadri": 1700
+          }
+        }
+      },
+      "pack_5_parutions": {
+        "formats": {
+          "format_46h_90l": {
+            "description": "46 h x 90 l",
+            "nbre_bases": 4,
+            "ajaccio_quadri": 900,
+            "autres_localites_quadri": 800
+          },
+          "format_74h_90l": {
+            "description": "74 h x 90 l",
+            "nbre_bases": 6,
+            "ajaccio_quadri": 1300,
+            "autres_localites_quadri": 1150
+          },
+          "format_102h_90l": {
+            "description": "102 h x 90 l",
+            "nbre_bases": 8,
+            "ajaccio_quadri": 1700,
+            "autres_localites_quadri": 1500
+          },
+          "format_159h_90l": {
+            "description": "159 h x 90 l",
+            "nbre_bases": 12,
+            "ajaccio_quadri": 2500,
+            "autres_localites_quadri": 2200
+          }
+        }
+      },
+      "tarifs_reference": "TARIFS  2019 / 2020",
+      "note_importante": "Attention, le tarif bi-média doit être impérativement proposé pour tout nouveau client",
+      "remise": "AUCUNE REMISE APPLICABLE"
+    },
+    "EMPLOI_INT_FORM": {
+      "type": "MODULES RUBRIQUES EN ANNONCES CLASSEES",
+      "region": "CORSE",
+      "modules_standards": {
+        "mod_1": {
+          "description": "MOD 1 74 H x 90 L ou 130 H x 45 L",
+          "1_jour": 150,
+          "3_jours": 350,
+          "5_jours": 600
+        },
+        "mod_2": {
+          "description": "MOD 2 102 H x 45 L",
+          "1_jour": 250,
+          "3_jours": 500,
+          "5_jours_formule": "=$H$12*A13"
+        },
+        "mod_3": {
+          "description": "MOD 3 102 H x 90 L",
+          "1_jour": 350,
+          "3_jours_formule": "=$F$12*A14",
+          "5_jours_formule": "=$H$12*A14"
+        },
+        "mod_4": {
+          "description": "MOD 4 159 H x 90 L",
+          "1_jour": 500,
+          "3_jours": 1000,
+          "5_jours_formule": "=$H$12*A15"
+        }
+      },
+      "grands_formats_corse_info": {
+        "mod_4": {
+          "description": "MOD 4 159 H x 90 L",
+          "1_jour": 600,
+          "3_jours": 1500,
+          "5_jours": 2000
+        },
+        "un_quart_page": {
+          "description": "1/4 page 212 H x 137,5 L ou 160H x 185 L",
+          "1_jour": 1000,
+          "3_jours": 2000,
+          "5_jours": 3000
+        },
+        "demi_page": {
+          "description": "1/2 page 212 H x 280 L",
+          "1_jour": 2000,
+          "3_jours": 4000,
+          "5_jours": 6000
+        },
+        "page_complete": {
+          "description": "Page 430 H x 280 L",
+          "1_jour": 4000,
+          "3_jours": 8000,
+          "5_jours": 12000
+        }
+      },
+      "note_parametrage": "OBS pour paramétrage : à monter en offre 'WEB' (et non en Ventes Annexes / Bien mettre dans le libellé : 2 col (car d'autres tarifs pour 1 col) / ATTENTION ECLATEMENT DES RECETTES : 90 % CARRIERE ON LINE / 10 % NICE MATIN",
+      "remise": "AUCUNE REMISE APPLICABLE"
+    },
+    "IMMO_MOTEURS": {
+      "sections": {
+        "page_une": {
+          "bandeau": {
+            "description": "Bandeau 130,5mm H x 280mm L",
+            "tarif": "1200 € HT"
+          }
+        },
+        "page_interieure": {
+          "manchette": {
+            "description": "Manchette 56mm H x 90mm L",
+            "tarif": "250 € HT"
+          },
+          "un_huitieme_page": {
+            "description": "1/8 page 160mm H x 90mm L",
+            "tarif": "400 € HT"
+          },
+          "bandeau": {
+            "description": "Bandeau 130,5mm H x 280mm L",
+            "tarif": "700 € HT"
+          },
+          "un_quart_page_format1": {
+            "description": "1/4 page 212mm H x 137,5mm L",
+            "tarif": "700 € HT"
+          },
+          "un_quart_page_format2": {
+            "description": "1/4 page 160mm H x 185mm L",
+            "tarif": "700 € HT"
+          },
+          "demi_page": {
+            "description": "1/2 page 212mm H x 280mm L",
+            "tarif": "1200 € HT"
+          },
+          "page_complete": {
+            "description": "1 page 430mm H x 280mm L",
+            "tarif": "2000 € HT"
+          },
+          "derniere_page": {
+            "description": "1 DER 430mm H x 280mm L",
+            "tarif": "2500 € HT"
+          }
+        },
+        "forfait_photos": {
+          "description": "Forfait 20 PA Photos",
+          "tarif": "350 € HT"
+        }
+      },
+      "calendrier_parutions": {
+        "moteurs": "3ème mardi du mois",
+        "immobilier": "4ème mardi du mois"
+      },
+      "remises": {
+        "remise_ca": {},
+        "remise_accelerateur": {},
+        "remise_couplage": {}
+      }
+    },
+    "SETTIMANA": {
+      "type": "MODULES PUBLICITAIRES",
+      "sections": {
+        "page_une_quadri": {
+          "manchette_titre_droite": {
+            "description": "Manchette Titre Droite 56 H x 90 L",
+            "tarif": 450
+          },
+          "module_bas_de_page": {
+            "description": "Module Bas de Page 90 H x 280 L",
+            "tarif": 1100
+          },
+          "couplage_bandeau_manchette": {
+            "description": "Couplage Bandeau Manchette",
+            "tarif": 1500
+          }
+        },
+        "page_deux_quadri": {
+          "module_bas_de_page": {
+            "description": "Module Bas de Page 90 H x 280 L",
+            "tarif": 800
+          }
+        },
+        "pages_interieures": {
+          "bandeau": {
+            "description": "BANDEAU 130,5 H x 280 L",
+            "tarif": 1000
+          },
+          "panoramique": {
+            "description": "PANORAMIQUE 2 x 430 x 280",
+            "tarif": 3500
+          },
+          "un_quart_page": {
+            "description": "1/4 PAGE 212 H x 137,5 L",
+            "coefficient": 1.9792,
+            "tarif": 950
+          },
+          "un_tiers_page": {
+            "description": "1/3 PAGE 159 H x 280 L",
+            "coefficient": 3.4375,
+            "tarif": 1200
+          },
+          "demi_page": {
+            "description": "1/2 PAGE 212 H x 280 L",
+            "coefficient": 5.4583,
+            "tarif": 1500
+          },
+          "page_complete": {
+            "description": "PAGE 430 H x 280 L",
+            "coefficient": 9.625,
+            "tarif": 2000
+          }
+        },
+        "page_ecologie_developpement_durable": {
+          "bandeau_sponsoring": {
+            "description": "BANDEAU 90 H x 280 L",
+            "tarif": 900
+          }
+        }
+      },
+      "remises": {
+        "remise_ca": {},
+        "remise_accelerateur": {},
+        "remise_couplage": {}
+      }
+    },
+    "SUPPLEMENTS_THEMATIQUES": {
+      "supplements": {
+        "seniors": {
+          "nom": "Supplément 'Séniors'",
+          "date": "2025-03-19"
+        },
+        "developpement_durable": {
+          "nom": "Supplément 'Développement durable'",
+          "date": "2025-05-21"
+        },
+        "sante": {
+          "nom": "Supplément 'Santé'",
+          "dates": ["03/07/2025", "30/09/2025", "17/12/2025"]
+        },
+        "conseil_aux_familles": {
+          "nom": "Supplément 'Conseil aux familles'",
+          "date": "2025-10-22"
+        },
+        "produits_corses": {
+          "nom": "Supplément 'Produits corses'",
+          "date": "2025-12-03"
+        }
+      },
+      "pack_print_web": {
+        "description": "PACK PRINT + WEB",
+        "web": "Megabanner ou pavé HP+RG 20000 PAP (5 jours)"
+      },
+      "sections": {
+        "page_une_quadri": {
+          "manchette": {
+            "description": "Manchette 56mm H x 90mm L",
+            "tarif": 350
+          },
+          "bandeau": {
+            "description": "Bandeau 90mm H x 280mm L",
+            "tarif": 850
+          },
+          "couplage_bandeau_manchette": {
+            "description": "Couplage Bandeau + manchette",
+            "tarif": 1100
+          }
+        },
+        "page_deux_quadri": {
+          "module_bas_de_page": {
+            "description": "Module Bas de Page 90 h x 280 l",
+            "tarif": 650
+          }
+        },
+        "pages_interieures": {
+          "bandeau": {
+            "description": "BANDEAU 130,5 h x 280 l",
+            "tarif": 650
+          },
+          "panoramique": {
+            "description": "PANORAMIQUE 2 x 430 h x 280 l",
+            "tarif": 2500
+          },
+          "un_quart_page": {
+            "description": "1/4 PAGE 212 h x 137,5 l",
+            "coefficient": 1.9792,
+            "tarif": 650
+          },
+          "un_tiers_page": {
+            "description": "1/3 PAGE 159 h x 280 l",
+            "coefficient": 3.4375,
+            "tarif": 750
+          },
+          "demi_page": {
+            "description": "1/2 PAGE 212 h x 280 l",
+            "coefficient": 5.4583,
+            "tarif": 950
+          },
+          "page_complete": {
+            "description": "PAGE 430 h x 280 l",
+            "coefficient": 9.625,
+            "tarif": 1600
+          }
+        }
+      },
+      "remises": {
+        "remise_ca": {},
+        "remise_accelerateur": {},
+        "remise_couplage": {}
+      }
+    },
+    "DIVERTO_triangle_P1_": {
+      "produit": "LE TRIANGLE DE PAGE 'UNE'",
+      "description": "format streamer rond H 80 x L 80 + 3 mm de rogne / format streamer rectangle H 80 x L 60 + 3 mm de rogne",
+      "conditions_commercialisation": {
+        "condition_1": "D' UN DOCUMENT SOUS BLISTER SUR UNE ZONE DEPARTEMENTALE",
+        "condition_2": "D' UNE PAGE INTERIEURE DEPARTEMENTALE"
+      },
+      "tarifs": {
+        "corse": {
+          "edition": "CORSE",
+          "tarif_forfaitaire": 500
+        }
+      },
+      "specifications_techniques": {
+        "streamer": "Streamer Lx H : 80x80 mm",
+        "courbure": "Courbure normée: Diamètre 80 mm"
+      },
+      "remises": {
+        "remise_ca": {},
+        "remise_couplage_accelerateur": {}
+      }
+    },
+    "DIVERTO_Jaquette_": {
+      "produit": "La 1/2 Jaquette + 1 Page en 2ème cahier",
+      "tarifs_edition_corse": {
+        "edition": "CORSE",
+        "tarif_forfaitaire": 4500
+      },
+      "tarifs_zones_multi_editions": {
+        "haute_corse": {
+          "edition": "HAUTE CORSE",
+          "tarif_forfaitaire": 3000
+        },
+        "corse_du_sud": {
+          "edition": "CORSE DU SUD",
+          "tarif_forfaitaire": 2000
+        }
+      },
+      "note_remise": "Attention : Remise plafonnée à -30%",
+      "specifications_techniques": {
+        "jaquette": "Jaquette L x H : 105x250 mm",
+        "format": "Format identique Recto / verso"
+      },
+      "remises": {
+        "remise_ca": {},
+        "remise_couplage_accelerateur": {}
+      }
+    },
+    "DIVERTO_Sur_Couv_Panoram": {
+      "produit": "Sur couverture panoramique + 1 semaine Interscroller 30000 impressions",
+      "tarifs_edition_corse": {
+        "edition": "Corse",
+        "tarif_forfaitaire": 6000
+      },
+      "tarifs_zones_multi_editions": {
+        "haute_corse": {
+          "edition": "Haute-Corse",
+          "tarif_forfaitaire": 3500
+        },
+        "corse_du_sud": {
+          "edition": "Corse du Sud",
+          "tarif_forfaitaire": 2500
+        }
+      },
+      "note_remise": "Attention : Remise plafonnée à -30%",
+      "repartition_ca": "80% Print + 20% Web",
+      "remises": {
+        "remise_ca": {},
+        "remise_couplage_accelerateur": {}
+      }
+    },
+    "DIVERTO_MOD_PUB": {
+      "type": "MODULES PUBLICITAIRES",
+      "quadrichromie": "QUADRICHROMIE",
+      "modules": {
+        "troisieme_couverture_page": {
+          "description": "3ème de Couverture - Page",
+          "tarif": 1000
+        },
+        "troisieme_couverture_demi_page": {
+          "description": "3ème de Couverture - 1/2 Page Largeur",
+          "tarif": 600
+        },
+        "page_complete": {
+          "description": "1 page",
+          "tarif": 1000
+        },
+        "demi_page": {
+          "description": "1/2 Page",
+          "tarif": 600
+        }
+      },
+      "note_commercialisation": "Attention si ouverture d'un cahier pub => 2 pages à commercialiser minimum (Seuil CA > 2K)",
+      "note_remise": "Attention : Remise plafonnée à -30%",
+      "remises": {
+        "remise_ca": {},
+        "remise_couplage_accelerateur": {}
+      }
+    },
+    "DIVERTO_ENC_BROCH_": {
+      "produit": "Distribution des Encarts ENCARTS BROCHES AU CENTRE",
+      "specifications": "Document Inférieur ou Egal à 50 Grammes, 4 à 16 pages Maximum, Format à la Française - Maximum 207 L x 250 H",
+      "tarifs": {
+        "corse": {
+          "edition": "CORSE",
+          "tarif": 2780
+        }
+      },
+      "note_technique": "Pour Toute Vente : Consultez les normes techniques",
+      "note_remise": "Attention : Remise plafonnée à -15%",
+      "remises": {
+        "remise_ca": {}
+      }
+    },
+    "DIVERTO_ENCARTS": {
+      "produit": "Distribution des Encarts Droit d'asile uniquement",
+      "format": "Format à la Française - Maximum 210 L x 297 H",
+      "note_technique": "Pour tout encart supérieur à 150 Gr : Consultez l'équipe technique de DIVERTO",
+      "tarifs_edition_corse": {
+        "poids_moins_50gr": 2725,
+        "poids_50_100gr_formule": "=C16*1.5",
+        "poids_100_150gr_formule": "=C16*2"
+      },
+      "tarifs_zones_multi_editions": {
+        "haute_corse": {
+          "poids_moins_50gr": 1600,
+          "poids_50_100gr_formule": "=C22*1.5",
+          "poids_100_150gr_formule": "=C22*2"
+        },
+        "corse_du_sud": {
+          "poids_moins_50gr": 1150,
+          "poids_50_100gr_formule": "=C23*1.5",
+          "poids_100_150gr_formule": "=C23*2"
+        }
+      },
+      "note_remise": "Attention : Remise plafonnée à -15%",
+      "remises": {
+        "remise_ca": {}
+      }
+    },
+    "DIVERTO_Une_Evenement": {
+      "produit": "LA 'UNE' EVENEMENT + 1 HABILLAGE HP DU SITE CORSEMATIN.COM + 1 SEMAINE D'INTERSCROLLER",
+      "condition": "Doit impérativement s'inscrire dans une campagne de communication concernant l'Evénénement sur Diverto ou Femina ou le Quotidien ou Settimana",
+      "tarifs_edition_corse": {
+        "edition": "CORSE",
+        "tarif_forfaitaire": 5000
+      },
+      "tarifs_zones_multi_editions": {
+        "haute_corse": {
+          "edition": "HAUTE CORSE",
+          "tarif": 3000
+        },
+        "corse_du_sud": {
+          "edition": "CORSE DU SUD",
+          "tarif": 2000
+        }
+      },
+      "note_remise": "Attention : Remise plafonnée à -20%",
+      "note_importante": "ACCORD DIRECTION IMPERATIF",
+      "repartition_ca": "70% CM et 30% WEB",
+      "remises": {
+        "remise_ca": {},
+        "remise_couplage_accelerateur": {}
+      }
+    },
+    "_FEMINA_Triangle_P1_": {
+      "produit": "Le Triangle de Page 'Une'",
+      "reference_tarifs": "TARIFS IDEM 2007",
+      "conditions_commercialisation": {
+        "condition_1": "D' UN DOCUMENT LIBRE ou sous BLISTER SUR UNE ZONE DEPARTEMENTALE",
+        "condition_2": "D' UNE PAGE INTERIEURE DEPARTEMENTALE",
+        "condition_3": "1 SEMAINE DE PRESENCE SUR CORSEMATIN.COM EN CARRE OU MEGABANNER"
+      },
+      "tarifs": {
+        "corse": {
+          "zone": "CORSE",
+          "tarif": 500
+        }
+      },
+      "repartition_ca": "70% CM et 30% WEB",
+      "remises": {
+        "remise_ca": {},
+        "remise_couplage_accelerateur": {}
+      }
+    },
+    "FEMINA_JAQUETTE": {
+      "note": "Commercialisation Possible sur Tous les Numéros de Version Femina",
+      "produit": "La 1/2 Jaquette + 1 Page",
+      "tarifs_zones_departementales": {
+        "corse": {
+          "zone": "CORSE",
+          "tarif": 5000
+        }
+      },
+      "tarifs_zones_multi_editions": {
+        "haute_corse": {
+          "zone": "HAUTE CORSE",
+          "tarif": 3000
+        },
+        "corse_du_sud": {
+          "zone": "CORSE DU SUD",
+          "tarif": 2000
+        }
+      },
+      "remises": {
+        "remise_ca": {},
+        "remise_couplage_accelerateur": {}
+      }
+    },
+    "FEMINA_Modules_Pub": {
+      "type": "MODULES PUBLICITAIRES DEPARTEMENTAUX",
+      "modules": {
+        "page_complete": {
+          "description": "PAGE",
+          "tarif": 1000
+        },
+        "demi_page": {
+          "description": "1/2 PAGE",
+          "tarif": 600
+        },
+        "un_quart_page": {
+          "description": "1/4 PAGE",
+          "tarif": 350
+        }
+      },
+      "publi_redac": {
+        "page_complete": {
+          "description": "1 Page Publi-Rédac (cf Charte)",
+          "tarif": "1000 € + 50 €HT Frais Techniques",
+          "note": "Frais de déplacement et photos en sus"
+        },
+        "double_page": {
+          "description": "1 Double Page Publi-Rédac (cf Charte)",
+          "tarif": "1500 €+ 100 €HT Frais Techniques",
+          "note": "Frais de déplacement et photos en sus"
+        }
+      },
+      "delai_reservation": "Attention délai de réservation J-30",
+      "remises": {
+        "remise_ca": {},
+        "remise_couplage_accelerateur": {}
+      }
+    },
+    "FEMINA_TDCE_DECO": {
+      "theme": "TENDANCE HABITAT & DECORATION",
+      "type": "MODULES PUBLICITAIRES DEPARTEMENTAUX",
+      "modules": {
+        "page_complete": {
+          "description": "PAGE",
+          "tarif": 1150
+        },
+        "demi_page": {
+          "description": "1/2 PAGE",
+          "tarif": 750
+        },
+        "un_quart_page": {
+          "description": "1/4 PAGE",
+          "tarif": 400
+        }
+      },
+      "publi_redac": {
+        "page_complete": {
+          "description": "1 Page Publi-Rédac (cf Charte)",
+          "tarif": "1150 € + 50 €HT Frais Techniques",
+          "note": "Frais de déplacement et photos en sus"
+        },
+        "double_page": {
+          "description": "1 Double Page Publi-Rédac (cf Charte)",
+          "tarif": "2200 €+ 100 €HT Frais Techniques",
+          "note": "Frais de déplacement et photos en sus"
+        }
+      },
+      "delai_reservation": "Attention délai de réservation J-30",
+      "remises": {
+        "remise_ca": {},
+        "remise_couplage_accelerateur": {}
+      }
+    },
+    "Encarts_FEMINA": {
+      "produit": "Distribution des Encarts JETE ou SOUS BLISTER* SANS RIGUEUR Droit d'asile uniquement",
+      "format": "FORMAT : VOIR CHARTE TECHNIQUE",
+      "notes_techniques": {
+        "note_1": "Pour Format à l'Italienne : MAJORATION DE 50 % (sous réserve de Possibilité Technique)",
+        "note_2": "Pour tout encart supérieur à 150 Gr : Consultez le 'Développement Print'"
+      },
+      "tarifs_zones_departementales": {
+        "corse": {
+          "poids_moins_50gr": 2725,
+          "poids_50_100gr_formule": "=D22*1.5",
+          "poids_100_150gr_formule": "=D22*2"
+        }
+      },
+      "tarifs_zones_multi_editions": {
+        "haute_corse": {
+          "poids_moins_50gr": 1600,
+          "poids_50_100gr_formule": "=D29*1.5",
+          "poids_100_150gr_formule": "=D29*2"
+        },
+        "corse_du_sud": {
+          "poids_moins_50gr": 1150,
+          "poids_50_100gr_formule": "=D30*1.5",
+          "poids_100_150gr_formule": "=D30*2"
+        }
+      },
+      "remises": {
+        "remise_ca": {}
+      }
+    }
+  },
+  "statistiques": {
+    "nombre_feuilles": 22,
+    "gammes_principales": ["PRIVILEGE", "BI MEDIA", "PERFORMANCE", "PROXI METIERS"],
+    "supports": ["Corse Matin", "Diverto", "Femina", "Settimana"],
+    "types_encarts": ["Encarts brochés", "Encarts libres", "Jaquettes", "Triangles"]
+  }
+}

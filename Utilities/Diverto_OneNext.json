@@ -1,0 +1,494 @@
+{
+  "metadata": {
+    "source_type": "tableau_audience",
+    "categories_groupees": ["Ensemble", "Hommes", "Femmes", "Foyers CSP+"]
+  },
+  "donnees_globales": {
+    "ensemble": {
+      "milliers": 5335,
+      "structure": 100.0,
+      "penetration": 9.8
+    },
+    "hommes": {
+      "milliers": 2545,
+      "structure": 100.0,
+      "penetration": 9.7
+    },
+    "femmes": {
+      "milliers": 2790,
+      "structure": 100.0,
+      "penetration": 9.9
+    },
+    "foyers_csp_plus": {
+      "milliers": 888,
+      "structure": 100.0,
+      "penetration": 4.4
+    }
+  },
+  "sexe": {
+    "femme": {
+      "ensemble": {
+        "milliers": 2790,
+        "structure": 52.3,
+        "penetration": 9.9
+      },
+      "hommes": {
+        "milliers": null,
+        "structure": null,
+        "penetration": null
+      },
+      "femmes": {
+        "milliers": 2790,
+        "structure": 100.0,
+        "penetration": 9.9
+      },
+      "foyers_csp_plus": {
+        "milliers": 371,
+        "structure": 41.8,
+        "penetration": 3.8
+      }
+    },
+    "homme": {
+      "ensemble": {
+        "milliers": 2545,
+        "structure": 47.7,
+        "penetration": 9.7
+      },
+      "hommes": {
+        "milliers": 2545,
+        "structure": 100.0,
+        "penetration": 9.7
+      },
+      "femmes": {
+        "milliers": null,
+        "structure": null,
+        "penetration": null
+      },
+      "foyers_csp_plus": {
+        "milliers": 517,
+        "structure": 58.2,
+        "penetration": 4.9
+      }
+    }
+  },
+  "age": {
+    "15_a_24_ans": {
+      "categorie": "15 à 24 ans",
+      "ensemble": {
+        "milliers": 231,
+        "structure": 4.3,
+        "penetration": 3.0
+      },
+      "hommes": {
+        "milliers": 142,
+        "structure": 5.6,
+        "penetration": 3.6
+      },
+      "femmes": {
+        "milliers": 89,
+        "structure": 3.2,
+        "penetration": 2.4
+      },
+      "foyers_csp_plus": {
+        "milliers": 92,
+        "structure": 10.3,
+        "penetration": 2.9
+      }
+    },
+    "25_a_34_ans": {
+      "categorie": "25 à 34 ans",
+      "ensemble": {
+        "milliers": 169,
+        "structure": 3.2,
+        "penetration": 2.3
+      },
+      "hommes": {
+        "milliers": 69,
+        "structure": 2.7,
+        "penetration": 1.9
+      },
+      "femmes": {
+        "milliers": 101,
+        "structure": 3.6,
+        "penetration": 2.7
+      },
+      "foyers_csp_plus": {
+        "milliers": 66,
+        "structure": 7.4,
+        "penetration": 1.9
+      }
+    },
+    "35_a_49_ans": {
+      "categorie": "35 à 49 ans",
+      "ensemble": {
+        "milliers": 471,
+        "structure": 8.8,
+        "penetration": 3.9
+      },
+      "hommes": {
+        "milliers": 244,
+        "structure": 9.6,
+        "penetration": 4.1
+      },
+      "femmes": {
+        "milliers": 227,
+        "structure": 8.1,
+        "penetration": 3.6
+      },
+      "foyers_csp_plus": {
+        "milliers": 223,
+        "structure": 25.2,
+        "penetration": 3.2
+      }
+    },
+    "50_a_59_ans": {
+      "categorie": "50 à 59 ans",
+      "ensemble": {
+        "milliers": 1196,
+        "structure": 22.4,
+        "penetration": 9.4
+      },
+      "hommes": {
+        "milliers": 588,
+        "structure": 23.1,
+        "penetration": 9.5
+      },
+      "femmes": {
+        "milliers": 609,
+        "structure": 21.8,
+        "penetration": 9.4
+      },
+      "foyers_csp_plus": {
+        "milliers": 421,
+        "structure": 47.4,
+        "penetration": 7.3
+      }
+    },
+    "60_ans_et_plus": {
+      "categorie": "60 ans et plus",
+      "ensemble": {
+        "milliers": 3267,
+        "structure": 61.2,
+        "penetration": 22.6
+      },
+      "hommes": {
+        "milliers": 1502,
+        "structure": 59.0,
+        "penetration": 23.5
+      },
+      "femmes": {
+        "milliers": 1765,
+        "structure": 63.3,
+        "penetration": 21.9
+      },
+      "foyers_csp_plus": {
+        "milliers": 86,
+        "structure": 9.7,
+        "penetration": 9.8
+      }
+    }
+  },
+  "pcs_individu": {
+    "affaires_et_cadres": {
+      "categorie": "Affaires et Cadres",
+      "ensemble": {
+        "milliers": 252,
+        "structure": 4.7,
+        "penetration": 3.8
+      },
+      "hommes": {
+        "milliers": 129,
+        "structure": 5.1,
+        "penetration": 3.4
+      },
+      "femmes": {
+        "milliers": 122,
+        "structure": 4.4,
+        "penetration": 4.3
+      },
+      "foyers_csp_plus": {
+        "milliers": 224,
+        "structure": 25.2,
+        "penetration": 3.6
+      }
+    },
+    "agriculteurs": {
+      "categorie": "Agriculteurs",
+      "ensemble": {
+        "milliers": 51,
+        "structure": 0.9,
+        "penetration": 11.5
+      },
+      "hommes": {
+        "milliers": 42,
+        "structure": 1.7,
+        "penetration": 15.7
+      },
+      "femmes": {
+        "milliers": 8,
+        "structure": 0.3,
+        "penetration": 4.8
+      },
+      "foyers_csp_plus": {
+        "milliers": null,
+        "structure": null,
+        "penetration": null
+      }
+    },
+    "autres_inactifs": {
+      "categorie": "Autres inactifs",
+      "ensemble": {
+        "milliers": 482,
+        "structure": 9.0,
+        "penetration": 5.3
+      },
+      "hommes": {
+        "milliers": 205,
+        "structure": 8.0,
+        "penetration": 5.7
+      },
+      "femmes": {
+        "milliers": 277,
+        "structure": 9.9,
+        "penetration": 5.0
+      },
+      "foyers_csp_plus": {
+        "milliers": 108,
+        "structure": 12.2,
+        "penetration": 3.5
+      }
+    },
+    "employes": {
+      "categorie": "Employés",
+      "ensemble": {
+        "milliers": 478,
+        "structure": 9.0,
+        "penetration": 5.9
+      },
+      "hommes": {
+        "milliers": 114,
+        "structure": 4.5,
+        "penetration": 4.9
+      },
+      "femmes": {
+        "milliers": 364,
+        "structure": 13.1,
+        "penetration": 6.3
+      },
+      "foyers_csp_plus": {
+        "milliers": 75,
+        "structure": 8.5,
+        "penetration": 5.1
+      }
+    },
+    "ouvriers": {
+      "categorie": "Ouvriers",
+      "ensemble": {
+        "milliers": 301,
+        "structure": 5.6,
+        "penetration": 5.1
+      },
+      "hommes": {
+        "milliers": 243,
+        "structure": 9.6,
+        "penetration": 5.4
+      },
+      "femmes": {
+        "milliers": 57,
+        "structure": 2.1,
+        "penetration": 4.2
+      },
+      "foyers_csp_plus": {
+        "milliers": 11,
+        "structure": 1.3,
+        "penetration": 1.9
+      }
+    },
+    "petits_patrons": {
+      "categorie": "Petits patrons",
+      "ensemble": {
+        "milliers": 94,
+        "structure": 1.8,
+        "penetration": 4.9
+      },
+      "hommes": {
+        "milliers": 68,
+        "structure": 2.7,
+        "penetration": 5.4
+      },
+      "femmes": {
+        "milliers": 26,
+        "structure": 0.9,
+        "penetration": 4.0
+      },
+      "foyers_csp_plus": {
+        "milliers": 90,
+        "structure": 10.1,
+        "penetration": 5.2
+      }
+    },
+    "professions_intermediaires": {
+      "categorie": "Professions intermédiaires",
+      "ensemble": {
+        "milliers": 359,
+        "structure": 6.7,
+        "penetration": 4.8
+      },
+      "hommes": {
+        "milliers": 189,
+        "structure": 7.4,
+        "penetration": 5.2
+      },
+      "femmes": {
+        "milliers": 170,
+        "structure": 6.1,
+        "penetration": 4.5
+      },
+      "foyers_csp_plus": {
+        "milliers": 307,
+        "structure": 34.5,
+        "penetration": 4.7
+      }
+    },
+    "retraites": {
+      "categorie": "Retraités",
+      "ensemble": {
+        "milliers": 3319,
+        "structure": 62.2,
+        "penetration": 22.2
+      },
+      "hommes": {
+        "milliers": 1554,
+        "structure": 61.1,
+        "penetration": 22.9
+      },
+      "femmes": {
+        "milliers": 1765,
+        "structure": 63.3,
+        "penetration": 21.6
+      },
+      "foyers_csp_plus": {
+        "milliers": 73,
+        "structure": 8.2,
+        "penetration": 11.3
+      }
+    }
+  },
+  "habitat": {
+    "agglo_plus_100000_hab": {
+      "categorie": "Agglo. + 100 000 hab",
+      "ensemble": {
+        "milliers": 1691,
+        "structure": 31.7,
+        "penetration": 10.3
+      },
+      "hommes": {
+        "milliers": 814,
+        "structure": 32.0,
+        "penetration": 10.4
+      },
+      "femmes": {
+        "milliers": 877,
+        "structure": 31.4,
+        "penetration": 10.2
+      },
+      "foyers_csp_plus": {
+        "milliers": 343,
+        "structure": 38.6,
+        "penetration": 5.4
+      }
+    },
+    "agglo_20000_a_100000_hab": {
+      "categorie": "Agglo. 20 000 à 100 000 hab",
+      "ensemble": {
+        "milliers": 966,
+        "structure": 18.1,
+        "penetration": 12.9
+      },
+      "hommes": {
+        "milliers": 459,
+        "structure": 18.0,
+        "penetration": 12.4
+      },
+      "femmes": {
+        "milliers": 507,
+        "structure": 18.2,
+        "penetration": 13.3
+      },
+      "foyers_csp_plus": {
+        "milliers": 146,
+        "structure": 16.4,
+        "penetration": 6.1
+      }
+    },
+    "agglo_moins_20000_hab": {
+      "categorie": "Agglo. - 20 000 hab",
+      "ensemble": {
+        "milliers": 1182,
+        "structure": 22.2,
+        "penetration": 12.0
+      },
+      "hommes": {
+        "milliers": 575,
+        "structure": 22.6,
+        "penetration": 12.2
+      },
+      "femmes": {
+        "milliers": 607,
+        "structure": 21.8,
+        "penetration": 11.8
+      },
+      "foyers_csp_plus": {
+        "milliers": 165,
+        "structure": 18.5,
+        "penetration": 5.3
+      }
+    },
+    "agglo_paris": {
+      "categorie": "Agglo. Paris",
+      "ensemble": {
+        "milliers": 68,
+        "structure": 1.3,
+        "penetration": 0.8
+      },
+      "hommes": {
+        "milliers": 35,
+        "structure": 1.4,
+        "penetration": 0.8
+      },
+      "femmes": {
+        "milliers": 32,
+        "structure": 1.2,
+        "penetration": 0.7
+      },
+      "foyers_csp_plus": {
+        "milliers": 50,
+        "structure": 5.6,
+        "penetration": 1.1
+      }
+    },
+    "communes_rurales": {
+      "categorie": "Communes rurales",
+      "ensemble": {
+        "milliers": 1428,
+        "structure": 26.8,
+        "penetration": 12.2
+      },
+      "hommes": {
+        "milliers": 662,
+        "structure": 26.0,
+        "penetration": 11.7
+      },
+      "femmes": {
+        "milliers": 767,
+        "structure": 27.5,
+        "penetration": 12.6
+      },
+      "foyers_csp_plus": {
+        "milliers": 186,
+        "structure": 20.9,
+        "penetration": 5.0
+      }
+    }
+  }
+}
