@@ -41,7 +41,7 @@ def collect_subdicts_with_paths(obj):
     _collect(obj, [])
     return results
 
-def collectData(data:list, search:str):
+def collectData(data:list, search:str) -> dict:
     """Permet de trier les données collecté
 
     Args:
@@ -49,11 +49,12 @@ def collectData(data:list, search:str):
         search (str): Dictionnaire recherché
 
     Returns:
-        dict: Dictionnaire de données recherché
+        dict: Dictionnaire de données recherché, ou dict vide si non trouvé
     """
     for i in data:
         if i[0] != [] and i[0][-1] == search:
             return i[1]
+    return {}  # Retourne un dict vide si rien n'est trouvé
         
 def getDataPathNames(data:list):
     """Permet d'obtenir l'ensemble des champs de recherche possible dans les données collecté
@@ -66,6 +67,50 @@ def getDataPathNames(data:list):
     """
     return [i[0][-1] for i in data if i[0] != []]
 
+def simplification(json: str, choice: str = ""):
+    """Simplifie l'accès aux données JSON collectées
+    
+    Args:
+        json (str): Chemin du fichier JSON
+        choice (str): Clé spécifique à rechercher. Si vide, retourne la liste complète.
+    
+    Returns:
+        dict | list: Dict si choice fourni, sinon liste de tuples (path, dict)
+    """
+    data = collect_subdicts_with_paths(loader(json))
+    if choice:
+        return collectData(data, choice)
+    return data
 
-#print(collectData(collect_subdicts_with_paths(loader("backend/testfiles/audience.json")),"donnees_principales"))
-print(getDataPathNames(collect_subdicts_with_paths(loader("backend/testfiles/cumul2A.json"))))
+
+def get_subdicts_by_key(json: str, key: str) -> dict:
+    """Récupère un sous-dictionnaire par sa clé (wrapper typé pour simplification)
+    
+    Args:
+        json (str): Chemin du fichier JSON
+        key (str): Clé du sous-dictionnaire recherchée
+    
+    Returns:
+        dict: Dictionnaire trouvé ou vide
+    """
+    result = simplification(json, key)
+    return result if isinstance(result, dict) else {}
+
+def extractDataOneNext(lst:dict, fstArg:str="", sndArg:str="", trdArg:str=""):
+    """summary
+
+    Args:
+        lst (list): fichier json
+        fstArg (str): premierArgument
+        sndArg (str): 2ndArgument
+
+    Returns:
+        type: Something
+    """
+    if trdArg != "":
+        return lst[fstArg][sndArg][trdArg]
+    return lst[fstArg][sndArg]
+
+#print(extractDataOneNext(get_subdicts_by_key("backend/testfiles/VF_OneNext.json", "femme"), "ensemble", "penetration"))
+print(collectData(collect_subdicts_with_paths(loader("backend/testfiles/chiffre_cles.json")),"Visites Totales"))
+#print(getDataPathNames(collect_subdicts_with_paths(loader("backend/testfiles/VF_OneNext.json"))))
