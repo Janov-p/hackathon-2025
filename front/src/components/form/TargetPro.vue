@@ -34,14 +34,14 @@ function isAllSelected(array, items) {
     <!-- Taille d'entreprise -->
     <div>
       <label class="block text-xs font-semibold text-gray-700 mb-1.5">Taille d'entreprise *</label>
-      <div class="flex flex-wrap gap-1">
+      <div class="grid grid-cols-3 md:flex md:flex-wrap gap-1">
         <button
           @click="selectAll(formData.taillesEntreprise, TAILLES_ENTREPRISE)"
           :class="[
-            'px-2.5 py-1 rounded-full text-xs font-medium transition-all duration-200 border',
+            'px-2.5 py-2 md:py-1 min-h-[40px] md:min-h-0 rounded-full text-xs font-medium transition-all duration-200 border active:scale-95',
             isAllSelected(formData.taillesEntreprise, TAILLES_ENTREPRISE)
               ? 'bg-cm-red text-white border-cm-red'
-              : 'bg-white text-cm-red border-cm-red/30 hover:bg-cm-red/5'
+              : 'bg-white text-cm-red border-cm-red/30 active:bg-cm-red/10'
           ]"
         >
           Tout
@@ -51,10 +51,10 @@ function isAllSelected(array, items) {
           :key="taille.value"
           @click="toggleItem(formData.taillesEntreprise, taille.value)"
           :class="[
-            'px-2.5 py-1 rounded-full text-xs font-medium transition-all duration-200',
+            'px-2.5 py-2 md:py-1 min-h-[40px] md:min-h-0 rounded-full text-xs font-medium transition-all duration-200 active:scale-95',
             formData.taillesEntreprise.includes(taille.value)
               ? 'bg-cm-red text-white'
-              : 'bg-gray-100 text-gray-700 hover:bg-cm-red/10'
+              : 'bg-gray-100 text-gray-700 active:bg-cm-red/20'
           ]"
         >
           {{ taille.label }}
@@ -65,14 +65,14 @@ function isAllSelected(array, items) {
     <!-- Secteurs cibles -->
     <div>
       <label class="block text-xs font-semibold text-gray-700 mb-1.5">Secteurs ciblés *</label>
-      <div class="flex flex-wrap gap-1">
+      <div class="grid grid-cols-2 md:flex md:flex-wrap gap-1">
         <button
           @click="selectAll(formData.secteursCibles, SECTEURS_CIBLES)"
           :class="[
-            'px-2.5 py-1 rounded-full text-xs font-medium transition-all duration-200 border',
+            'px-2.5 py-2 md:py-1 min-h-[40px] md:min-h-0 rounded-full text-xs font-medium transition-all duration-200 border active:scale-95',
             isAllSelected(formData.secteursCibles, SECTEURS_CIBLES)
               ? 'bg-cm-red text-white border-cm-red'
-              : 'bg-white text-cm-red border-cm-red/30 hover:bg-cm-red/5'
+              : 'bg-white text-cm-red border-cm-red/30 active:bg-cm-red/10'
           ]"
         >
           Tout
@@ -82,10 +82,10 @@ function isAllSelected(array, items) {
           :key="secteur.value"
           @click="toggleItem(formData.secteursCibles, secteur.value)"
           :class="[
-            'px-2.5 py-1 rounded-full text-xs font-medium transition-all duration-200',
+            'px-2.5 py-2 md:py-1 min-h-[40px] md:min-h-0 rounded-full text-xs font-medium transition-all duration-200 active:scale-95',
             formData.secteursCibles.includes(secteur.value)
               ? 'bg-cm-red text-white'
-              : 'bg-gray-100 text-gray-700 hover:bg-cm-red/10'
+              : 'bg-gray-100 text-gray-700 active:bg-cm-red/20'
           ]"
         >
           {{ secteur.label }}
@@ -96,14 +96,14 @@ function isAllSelected(array, items) {
     <!-- Fonctions décisionnaires -->
     <div>
       <label class="block text-xs font-semibold text-gray-700 mb-1.5">Fonctions</label>
-      <div class="flex flex-wrap gap-1">
+      <div class="grid grid-cols-2 md:flex md:flex-wrap gap-1">
         <button
           @click="selectAll(formData.fonctions, FONCTIONS)"
           :class="[
-            'px-2.5 py-1 rounded-full text-xs font-medium transition-all duration-200 border',
+            'px-2.5 py-2 md:py-1 min-h-[40px] md:min-h-0 rounded-full text-xs font-medium transition-all duration-200 border active:scale-95',
             isAllSelected(formData.fonctions, FONCTIONS)
               ? 'bg-cm-red text-white border-cm-red'
-              : 'bg-white text-cm-red border-cm-red/30 hover:bg-cm-red/5'
+              : 'bg-white text-cm-red border-cm-red/30 active:bg-cm-red/10'
           ]"
         >
           Tout
@@ -113,10 +113,10 @@ function isAllSelected(array, items) {
           :key="fonction.value"
           @click="toggleItem(formData.fonctions, fonction.value)"
           :class="[
-            'px-2.5 py-1 rounded-full text-xs font-medium transition-all duration-200',
+            'px-2.5 py-2 md:py-1 min-h-[40px] md:min-h-0 rounded-full text-xs font-medium transition-all duration-200 active:scale-95',
             formData.fonctions.includes(fonction.value)
               ? 'bg-cm-red text-white'
-              : 'bg-gray-100 text-gray-700 hover:bg-cm-red/10'
+              : 'bg-gray-100 text-gray-700 active:bg-cm-red/20'
           ]"
         >
           {{ fonction.label }}

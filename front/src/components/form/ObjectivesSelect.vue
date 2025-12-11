@@ -56,19 +56,19 @@ const isAllSelected = computed(() => formData.value.objectifs.length === OBJECTI
         :key="objectif.value"
         @click="toggleObjectif(objectif.value)"
         :class="[
-          'flex items-center gap-2 p-2 rounded-lg border transition-all duration-200 text-left',
+          'flex items-center gap-2 p-2.5 md:p-2 min-h-[44px] rounded-lg border transition-all duration-200 text-left active:scale-[0.98]',
           isSelected(objectif.value)
             ? 'border-cm-red bg-cm-red/5'
-            : 'border-gray-200 hover:border-cm-red/30 hover:bg-gray-50'
+            : 'border-gray-200 active:border-cm-red/50 active:bg-gray-100'
         ]"
       >
         <div :class="[
-          'w-4 h-4 rounded border flex items-center justify-center flex-shrink-0 transition-colors',
+          'w-5 h-5 md:w-4 md:h-4 rounded border flex items-center justify-center flex-shrink-0 transition-colors',
           isSelected(objectif.value)
             ? 'border-cm-red bg-cm-red'
             : 'border-gray-300'
         ]">
-          <svg v-if="isSelected(objectif.value)" class="w-2.5 h-2.5 text-white" fill="currentColor" viewBox="0 0 20 20">
+          <svg v-if="isSelected(objectif.value)" class="w-3 h-3 md:w-2.5 md:h-2.5 text-white" fill="currentColor" viewBox="0 0 20 20">
             <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
           </svg>
         </div>

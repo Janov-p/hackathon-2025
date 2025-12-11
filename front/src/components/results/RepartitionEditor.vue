@@ -150,29 +150,29 @@ function getBudgetForCategory(key) {
           </div>
         </div>
         
-        <!-- Slider avec poignée de drag -->
-        <div class="relative h-3 group">
-          <div class="absolute inset-y-0.5 left-0 right-0 bg-gray-200 rounded-full"></div>
+        <!-- Slider avec poignée de drag - Plus grand sur mobile -->
+        <div class="relative h-6 md:h-3 group">
+          <div class="absolute inset-y-2 md:inset-y-0.5 left-0 right-0 bg-gray-200 rounded-full"></div>
           <div 
-            class="absolute top-0.5 left-0 h-2 rounded-full transition-all duration-200"
+            class="absolute top-2 md:top-0.5 left-0 h-2 rounded-full transition-all duration-200"
             :style="{ width: repartition[cat.key] + '%', backgroundColor: locked[cat.key] ? '#9ca3af' : cat.color }"
           ></div>
-          <!-- Poignée de drag avec points -->
+          <!-- Poignée de drag avec points - Plus grande sur mobile -->
           <div 
-            class="absolute top-1/2 -translate-y-1/2 w-5 h-5 rounded-full bg-white shadow-md border-2 flex items-center justify-center transition-all"
+            class="absolute top-1/2 -translate-y-1/2 w-7 h-7 md:w-5 md:h-5 rounded-full bg-white shadow-md border-2 flex items-center justify-center transition-all"
             :style="{ 
-              left: `calc(${repartition[cat.key]}% - 10px)`,
+              left: `calc(${repartition[cat.key]}% - 14px)`,
               borderColor: locked[cat.key] ? '#9ca3af' : cat.color
             }"
             :class="locked[cat.key] ? 'cursor-not-allowed' : 'cursor-grab group-active:cursor-grabbing'"
           >
             <!-- Points de grip -->
             <div class="flex gap-0.5" v-if="!locked[cat.key]">
-              <div class="w-0.5 h-2 rounded-full" :style="{ backgroundColor: cat.color }"></div>
-              <div class="w-0.5 h-2 rounded-full" :style="{ backgroundColor: cat.color }"></div>
+              <div class="w-0.5 h-3 md:h-2 rounded-full" :style="{ backgroundColor: cat.color }"></div>
+              <div class="w-0.5 h-3 md:h-2 rounded-full" :style="{ backgroundColor: cat.color }"></div>
             </div>
             <!-- Icône verrou si verrouillé -->
-            <svg v-else class="w-2.5 h-2.5 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+            <svg v-else class="w-3 h-3 md:w-2.5 md:h-2.5 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
               <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd" />
             </svg>
           </div>

@@ -84,7 +84,8 @@ watch(lastUpdate, () => {
         </template>
       </PanelLayout>
 
-      <!-- Export Button - Between the two right panels (hidden in edit mode) -->
+      <!-- Export Button - Between the two right panels (hidden in edit mode and on mobile) -->
+      <!-- Export Button Desktop - Floating center -->
       <transition
         enter-active-class="transition-opacity duration-200"
         enter-from-class="opacity-0"
@@ -93,12 +94,26 @@ watch(lastUpdate, () => {
         leave-from-class="opacity-100"
         leave-to-class="opacity-0"
       >
-        <div v-if="!isEditingPlan" class="absolute top-1/2 translate-x-1/2 -translate-y-1/2 z-20" style="right: calc(25% + 4px)">
+        <div v-if="!isEditingPlan" class="hidden md:block absolute top-1/2 translate-x-1/2 -translate-y-1/2 z-20" style="right: calc(25% + 4px)">
           <ExportButton />
         </div>
       </transition>
 
-      <!-- Toggle Panels Button - Coin droit (hidden in edit mode) -->
+      <!-- Export Button Mobile - Sticky bottom bar -->
+      <transition
+        enter-active-class="transition-all duration-200"
+        enter-from-class="opacity-0 translate-y-full"
+        enter-to-class="opacity-100 translate-y-0"
+        leave-active-class="transition-all duration-200"
+        leave-from-class="opacity-100 translate-y-0"
+        leave-to-class="opacity-0 translate-y-full"
+      >
+        <div v-if="!isEditingPlan" class="md:hidden fixed bottom-0 left-0 right-0 z-50 px-2 pb-2 pt-2 bg-cm-gray">
+          <ExportButton class="w-full justify-center !rounded-xl" />
+        </div>
+      </transition>
+
+      <!-- Toggle Panels Button - Coin droit (hidden in edit mode and on mobile) -->
       <transition
         enter-active-class="transition-opacity duration-200"
         enter-from-class="opacity-0"
@@ -110,7 +125,7 @@ watch(lastUpdate, () => {
         <button
           v-if="!isEditingPlan"
           @click="togglePanels"
-          class="absolute top-4 right-4 z-30 p-2 bg-white rounded-lg shadow-lg hover:bg-cm-gray transition-colors group"
+          class="hidden md:block absolute top-4 right-4 z-30 p-2 bg-white rounded-lg shadow-lg hover:bg-cm-gray transition-colors group"
           title="Inverser les panneaux"
         >
           <svg class="w-5 h-5 text-cm-dark transition-transform duration-300" :class="{ 'rotate-180': panelsInverted }" fill="none" stroke="currentColor" viewBox="0 0 24 24">

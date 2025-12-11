@@ -80,14 +80,14 @@ function getDonutPath(start, end) {
     <div v-else class="space-y-4 overflow-auto">
       <!-- Impact & Exposition -->
       <div>
-        <h4 class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-3 flex items-center gap-2">
+        <h4 class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-2 md:mb-3 flex items-center gap-2">
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
           </svg>
           Impact & Exposition
         </h4>
-        <div class="grid grid-cols-2 gap-3">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 md:gap-3">
           <KpiCard
             title="Audience Cumulée"
             :value="kpiResults.audienceCumulee"
@@ -144,13 +144,13 @@ function getDonutPath(start, end) {
 
       <!-- Efficacité Financière -->
       <div>
-        <h4 class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-3 flex items-center gap-2">
+        <h4 class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-2 md:mb-3 flex items-center gap-2">
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>
           Efficacité Financière
         </h4>
-        <div class="grid grid-cols-2 gap-3">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 md:gap-3">
           <KpiCard
             title="Coût GRP"
             :value="kpiResults.coutGrp"
@@ -172,13 +172,13 @@ function getDonutPath(start, end) {
 
       <!-- Engagement & Action -->
       <div>
-        <h4 class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-3 flex items-center gap-2">
+        <h4 class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-2 md:mb-3 flex items-center gap-2">
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5M7.188 2.239l.777 2.897M5.136 7.965l-2.898-.777M13.95 4.05l-2.122 2.122m-5.657 5.656l-2.12 2.122" />
           </svg>
           Engagement & Action
         </h4>
-        <div class="grid grid-cols-2 gap-3">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 md:gap-3">
           <KpiCard
             title="Clics Estimés"
             :value="kpiResults.clicsEstimes"
@@ -199,16 +199,16 @@ function getDonutPath(start, end) {
 
       <!-- Répartition Stratégique - Donut Chart -->
       <div>
-        <h4 class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-3 flex items-center gap-2">
+        <h4 class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-2 md:mb-3 flex items-center gap-2">
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z" />
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z" />
           </svg>
           Répartition Stratégique
         </h4>
-        <div class="flex items-center gap-4">
+        <div class="flex flex-col sm:flex-row items-center gap-3 md:gap-4">
           <!-- Donut Chart -->
-          <div class="relative w-32 h-32 flex-shrink-0">
+          <div class="relative w-24 h-24 md:w-32 md:h-32 flex-shrink-0">
             <svg viewBox="0 0 100 100" class="w-full h-full transform -rotate-90">
               <path
                 v-for="(segment, index) in donutSegments"
@@ -224,15 +224,15 @@ function getDonutPath(start, end) {
             </div>
           </div>
           <!-- Legend -->
-          <div class="flex-1 space-y-2">
+          <div class="flex-1 w-full grid grid-cols-2 sm:grid-cols-1 gap-1 md:gap-2">
             <div
               v-for="item in donutData"
               :key="item.label"
-              class="flex items-center justify-between text-sm"
+              class="flex items-center justify-between text-xs md:text-sm px-2 py-1 bg-gray-50 rounded-lg sm:bg-transparent sm:px-0 sm:py-0"
             >
-              <div class="flex items-center gap-2">
+              <div class="flex items-center gap-1.5 md:gap-2">
                 <div
-                  class="w-3 h-3 rounded-full"
+                  class="w-2.5 h-2.5 md:w-3 md:h-3 rounded-full flex-shrink-0"
                   :style="{ backgroundColor: item.color }"
                 ></div>
                 <span class="text-gray-600">{{ item.label }}</span>

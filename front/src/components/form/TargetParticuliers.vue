@@ -34,14 +34,14 @@ function isAllSelected(array, items) {
     <!-- Tranches d'âge -->
     <div>
       <label class="block text-xs font-semibold text-gray-700 mb-1.5">Tranches d'âge *</label>
-      <div class="flex flex-wrap gap-1">
+      <div class="grid grid-cols-3 md:flex md:flex-wrap gap-1">
         <button
           @click="selectAll(formData.ages, TRANCHES_AGE)"
           :class="[
-            'px-2.5 py-1 rounded-full text-xs font-medium transition-all duration-200 border',
+            'px-2.5 py-2 md:py-1 min-h-[40px] md:min-h-0 rounded-full text-xs font-medium transition-all duration-200 border active:scale-95',
             isAllSelected(formData.ages, TRANCHES_AGE)
               ? 'bg-cm-red text-white border-cm-red'
-              : 'bg-white text-cm-red border-cm-red/30 hover:bg-cm-red/5'
+              : 'bg-white text-cm-red border-cm-red/30 active:bg-cm-red/10'
           ]"
         >
           Tout
@@ -51,10 +51,10 @@ function isAllSelected(array, items) {
           :key="age.value"
           @click="toggleItem(formData.ages, age.value)"
           :class="[
-            'px-2.5 py-1 rounded-full text-xs font-medium transition-all duration-200',
+            'px-2.5 py-2 md:py-1 min-h-[40px] md:min-h-0 rounded-full text-xs font-medium transition-all duration-200 active:scale-95',
             formData.ages.includes(age.value)
               ? 'bg-cm-red text-white'
-              : 'bg-gray-100 text-gray-700 hover:bg-cm-red/10'
+              : 'bg-gray-100 text-gray-700 active:bg-cm-red/20'
           ]"
         >
           {{ age.label }}
@@ -65,16 +65,16 @@ function isAllSelected(array, items) {
     <!-- Sexe -->
     <div>
       <label class="block text-xs font-semibold text-gray-700 mb-1.5">Sexe</label>
-      <div class="flex gap-1">
+      <div class="grid grid-cols-3 gap-1">
         <button
           v-for="sexe in SEXES"
           :key="sexe.value"
           @click="formData.sexe = sexe.value"
           :class="[
-            'px-3 py-1 rounded-full text-xs font-medium transition-all duration-200',
+            'px-3 py-2 md:py-1 min-h-[40px] md:min-h-0 rounded-full text-xs font-medium transition-all duration-200 active:scale-95',
             formData.sexe === sexe.value
               ? 'bg-cm-red text-white'
-              : 'bg-gray-100 text-gray-700 hover:bg-cm-red/10'
+              : 'bg-gray-100 text-gray-700 active:bg-cm-red/20'
           ]"
         >
           {{ sexe.label }}
@@ -85,14 +85,14 @@ function isAllSelected(array, items) {
     <!-- CSP -->
     <div>
       <label class="block text-xs font-semibold text-gray-700 mb-1.5">CSP *</label>
-      <div class="flex flex-wrap gap-1">
+      <div class="grid grid-cols-2 md:flex md:flex-wrap gap-1">
         <button
           @click="selectAll(formData.csp, CSP)"
           :class="[
-            'px-2.5 py-1 rounded-full text-xs font-medium transition-all duration-200 border',
+            'px-2.5 py-2 md:py-1 min-h-[40px] md:min-h-0 rounded-full text-xs font-medium transition-all duration-200 border active:scale-95',
             isAllSelected(formData.csp, CSP)
               ? 'bg-cm-red text-white border-cm-red'
-              : 'bg-white text-cm-red border-cm-red/30 hover:bg-cm-red/5'
+              : 'bg-white text-cm-red border-cm-red/30 active:bg-cm-red/10'
           ]"
         >
           Tout
@@ -102,10 +102,10 @@ function isAllSelected(array, items) {
           :key="csp.value"
           @click="toggleItem(formData.csp, csp.value)"
           :class="[
-            'px-2.5 py-1 rounded-full text-xs font-medium transition-all duration-200',
+            'px-2.5 py-2 md:py-1 min-h-[40px] md:min-h-0 rounded-full text-xs font-medium transition-all duration-200 active:scale-95',
             formData.csp.includes(csp.value)
               ? 'bg-cm-red text-white'
-              : 'bg-gray-100 text-gray-700 hover:bg-cm-red/10'
+              : 'bg-gray-100 text-gray-700 active:bg-cm-red/20'
           ]"
         >
           {{ csp.label }}
@@ -116,14 +116,14 @@ function isAllSelected(array, items) {
     <!-- Centres d'intérêt -->
     <div>
       <label class="block text-xs font-semibold text-gray-700 mb-1.5">Centres d'intérêt</label>
-      <div class="flex flex-wrap gap-1">
+      <div class="grid grid-cols-2 md:flex md:flex-wrap gap-1">
         <button
           @click="selectAll(formData.centresInteret, CENTRES_INTERET)"
           :class="[
-            'px-2.5 py-1 rounded-full text-xs font-medium transition-all duration-200 border',
+            'px-2.5 py-2 md:py-1 min-h-[40px] md:min-h-0 rounded-full text-xs font-medium transition-all duration-200 border active:scale-95',
             isAllSelected(formData.centresInteret, CENTRES_INTERET)
               ? 'bg-cm-dark text-white border-cm-dark'
-              : 'bg-white text-cm-dark border-cm-dark/30 hover:bg-cm-dark/5'
+              : 'bg-white text-cm-dark border-cm-dark/30 active:bg-cm-dark/10'
           ]"
         >
           Tout
@@ -133,10 +133,10 @@ function isAllSelected(array, items) {
           :key="interet.value"
           @click="toggleItem(formData.centresInteret, interet.value)"
           :class="[
-            'px-2.5 py-1 rounded-full text-xs font-medium transition-all duration-200',
+            'px-2.5 py-2 md:py-1 min-h-[40px] md:min-h-0 rounded-full text-xs font-medium transition-all duration-200 active:scale-95',
             formData.centresInteret.includes(interet.value)
               ? 'bg-cm-dark text-white'
-              : 'bg-gray-100 text-gray-700 hover:bg-cm-dark/10'
+              : 'bg-gray-100 text-gray-700 active:bg-cm-dark/20'
           ]"
         >
           {{ interet.label }}

@@ -70,18 +70,24 @@ function formatCurrency(value) {
 
 <template>
   <div class="h-full flex flex-col">
-    <!-- Bandeau coût total avec remise -->
-    <div class="flex-shrink-0 bg-gradient-to-r from-cm-red to-cm-dark p-4 text-white">
-      <div class="flex items-center justify-between gap-4">
+    <!-- Bandeau coût total avec remise - Sticky sur mobile -->
+    <div class="flex-shrink-0 bg-gradient-to-r from-cm-red to-cm-dark p-3 md:p-4 text-white sticky top-0 z-10">
+      <div class="flex flex-wrap md:flex-nowrap items-center justify-between gap-2 md:gap-4">
         <!-- Brut HT -->
-        <div class="flex-1">
+        <div class="order-1">
           <div class="text-xs text-white/70 uppercase tracking-wider">Brut HT</div>
-          <div class="text-xl font-bold">{{ formatCurrency(brutHT) }}</div>
+          <div class="text-lg md:text-xl font-bold">{{ formatCurrency(brutHT) }}</div>
         </div>
         
-        <!-- Remise -->
-        <div class="flex items-center gap-3 bg-white/10 rounded-lg px-3 py-2">
-          <label class="flex items-center gap-2 cursor-pointer">
+        <!-- Net HT -->
+        <div class="order-2 text-right">
+          <div class="text-xs text-white/70 uppercase tracking-wider">Net HT</div>
+          <div class="text-xl md:text-2xl font-bold">{{ formatCurrency(netHT) }}</div>
+        </div>
+        
+        <!-- Remise - Full width on mobile -->
+        <div class="order-3 w-full md:w-auto md:order-2 flex items-center justify-center gap-3 bg-white/10 rounded-lg px-3 py-2 mt-2 md:mt-0">
+          <label class="flex items-center gap-2 cursor-pointer min-h-[44px]">
             <div class="relative">
               <input
                 type="checkbox"
@@ -89,8 +95,8 @@ function formatCurrency(value) {
                 @change="updateRemiseActive($event.target.checked)"
                 class="sr-only peer"
               />
-              <div class="w-8 h-5 bg-white/30 rounded-full peer-checked:bg-green-400 transition-colors"></div>
-              <div class="absolute left-0.5 top-0.5 w-4 h-4 bg-white rounded-full transition-transform peer-checked:translate-x-3"></div>
+              <div class="w-10 h-6 md:w-8 md:h-5 bg-white/30 rounded-full peer-checked:bg-green-400 transition-colors"></div>
+              <div class="absolute left-0.5 top-0.5 w-5 h-5 md:w-4 md:h-4 bg-white rounded-full transition-transform peer-checked:translate-x-4 md:peer-checked:translate-x-3"></div>
             </div>
             <span class="text-sm font-medium">Remise</span>
           </label>
@@ -102,32 +108,26 @@ function formatCurrency(value) {
               @input="updateRemiseValeur($event.target.value)"
               min="0"
               max="100"
-              class="w-16 px-2 py-1 text-sm text-cm-dark bg-white rounded border-0 focus:ring-2 focus:ring-white/50"
+              class="w-16 px-2 py-2 md:py-1 min-h-[44px] md:min-h-0 text-sm text-cm-dark bg-white rounded border-0 focus:ring-2 focus:ring-white/50"
             />
             <span class="text-sm font-medium">%</span>
           </div>
         </div>
-        
-        <!-- Net HT -->
-        <div class="flex-1 text-right">
-          <div class="text-xs text-white/70 uppercase tracking-wider">Net HT</div>
-          <div class="text-2xl font-bold">{{ formatCurrency(netHT) }}</div>
-        </div>
       </div>
     </div>
 
-    <!-- Header with tabs -->
+    <!-- Header with tabs - Scrollable horizontally -->
     <div class="flex-shrink-0 border-b border-gray-200">
-      <div class="flex overflow-x-auto scrollbar-hide">
+      <div class="flex overflow-x-auto scrollbar-hide -mb-px">
         <button
           v-for="tab in tabs"
           :key="tab.id"
           @click="activeTab = tab.id"
           :class="[
-            'flex items-center gap-2 px-4 py-3 text-sm font-medium whitespace-nowrap border-b-2 transition-colors',
+            'flex items-center gap-1.5 md:gap-2 px-3 md:px-4 py-2.5 md:py-3 min-h-[48px] text-xs md:text-sm font-medium whitespace-nowrap border-b-2 transition-colors',
             activeTab === tab.id
               ? 'border-cm-red text-cm-red'
-              : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+              : 'border-transparent text-gray-500 active:text-gray-700'
           ]"
         >
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -139,7 +139,7 @@ function formatCurrency(value) {
     </div>
 
     <!-- Content area -->
-    <div class="flex-1 overflow-y-auto p-4">
+    <div class="flex-1 overflow-y-auto p-3 md:p-4">
       <transition
         mode="out-in"
         enter-active-class="transition-opacity duration-150"
@@ -156,8 +156,8 @@ function formatCurrency(value) {
       </transition>
     </div>
 
-    <!-- Summary bar -->
-    <div class="flex-shrink-0 border-t border-gray-200 bg-gray-50 px-4 py-3">
+    <!-- Summary bar - Hidden on mobile to save space -->
+    <div class="hidden md:block flex-shrink-0 border-t border-gray-200 bg-gray-50 px-4 py-3">
       <div class="flex items-center justify-between text-sm">
         <div class="flex items-center gap-6">
           <div>
@@ -172,20 +172,26 @@ function formatCurrency(value) {
       </div>
     </div>
 
-    <!-- Action buttons -->
-    <div class="flex-shrink-0 border-t border-gray-200 bg-white px-4 py-3 flex items-center justify-between gap-3">
-      <button
-        @click="handleCancel"
-        class="px-4 py-2 text-sm font-medium text-gray-600 hover:text-gray-800 transition-colors"
-      >
-        Annuler
-      </button>
+    <!-- Action buttons - Sticky bottom on mobile -->
+    <div class="flex-shrink-0 border-t border-gray-200 bg-white px-3 md:px-4 py-3 flex flex-col md:flex-row items-stretch md:items-center justify-between gap-2 md:gap-3 sticky bottom-0">
+      <!-- Mobile summary -->
+      <div class="md:hidden flex justify-between text-xs text-gray-500 mb-1">
+        <span>Budget: <strong class="text-cm-dark">{{ formatCurrency(budgetFinal) }}</strong></span>
+        <span>Formats: <strong class="text-cm-dark">{{ formatCurrency(totalFormats) }}</strong></span>
+      </div>
       
-      <div class="flex items-center gap-3">
+      <div class="flex items-center justify-between md:justify-start gap-2 md:gap-3 order-2 md:order-1">
+        <button
+          @click="handleCancel"
+          class="px-4 py-2.5 md:py-2 min-h-[44px] text-sm font-medium text-gray-600 hover:text-gray-800 active:text-gray-900 transition-colors"
+        >
+          Annuler
+        </button>
+        
         <button
           @click="handleRecalculate"
           :disabled="isLoading"
-          class="flex items-center gap-2 px-4 py-2 text-sm font-medium text-cm-dark border border-cm-dark rounded-lg hover:bg-cm-dark hover:text-white disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+          class="flex items-center justify-center gap-2 px-3 md:px-4 py-2.5 md:py-2 min-h-[44px] text-sm font-medium text-cm-dark border border-cm-dark rounded-lg hover:bg-cm-dark hover:text-white active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
         >
           <svg v-if="isLoading" class="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
             <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
@@ -194,19 +200,19 @@ function formatCurrency(value) {
           <svg v-else class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
           </svg>
-          {{ isLoading ? 'Calcul...' : 'Recalculer les KPI' }}
-        </button>
-        
-        <button
-          @click="handleSave"
-          class="flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-cm-red rounded-lg hover:bg-cm-red/90 transition-colors"
-        >
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-          </svg>
-          Valider
+          <span class="hidden sm:inline">{{ isLoading ? 'Calcul...' : 'Recalculer' }}</span>
         </button>
       </div>
+      
+      <button
+        @click="handleSave"
+        class="flex items-center justify-center gap-2 px-4 py-2.5 md:py-2 min-h-[44px] text-sm font-medium text-white bg-cm-red rounded-lg hover:bg-cm-red/90 active:scale-95 transition-all order-1 md:order-2"
+      >
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+        </svg>
+        Valider les modifications
+      </button>
     </div>
   </div>
 </template>

@@ -73,19 +73,19 @@ function handleEdit() {
       <!-- Edit button -->
       <button
         @click="handleEdit"
-        class="w-full flex items-center justify-center gap-2 px-4 py-3 bg-cm-red/10 text-cm-red font-medium rounded-xl border-2 border-dashed border-cm-red/30 hover:bg-cm-red hover:text-white hover:border-cm-red transition-all duration-200"
+        class="w-full flex items-center justify-center gap-2 px-3 md:px-4 py-2.5 md:py-3 min-h-[44px] bg-cm-red/10 text-cm-red font-medium rounded-lg md:rounded-xl border-2 border-dashed border-cm-red/30 hover:bg-cm-red hover:text-white hover:border-cm-red active:scale-[0.98] transition-all duration-200"
       >
         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
         </svg>
-        Modifier le plan média
+        <span class="text-sm md:text-base">Modifier le plan média</span>
       </button>
 
       <!-- Supports recommandés -->
-      <div class="border border-gray-200 rounded-xl overflow-hidden">
+      <div class="border border-gray-200 rounded-lg md:rounded-xl overflow-hidden">
         <button
           @click="toggleSection('supports')"
-          class="w-full flex items-center justify-between p-4 bg-gray-50 hover:bg-gray-100 transition-colors"
+          class="w-full flex items-center justify-between p-3 md:p-4 min-h-[48px] bg-gray-50 hover:bg-gray-100 active:bg-gray-200 transition-colors"
         >
           <div class="flex items-center gap-2">
             <svg class="w-5 h-5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -113,7 +113,7 @@ function handleEdit() {
           leave-from-class="opacity-100 max-h-96"
           leave-to-class="opacity-0 max-h-0"
         >
-          <div v-if="expandedSections.supports" class="p-4 space-y-3 overflow-hidden">
+          <div v-if="expandedSections.supports" class="p-3 md:p-4 space-y-2 md:space-y-3 overflow-hidden">
             <div
               v-for="(support, index) in mediaPlan.supportsRecommandes"
               :key="index"
@@ -141,10 +141,10 @@ function handleEdit() {
       </div>
 
       <!-- Formats proposés -->
-      <div class="border border-gray-200 rounded-xl overflow-hidden">
+      <div class="border border-gray-200 rounded-lg md:rounded-xl overflow-hidden">
         <button
           @click="toggleSection('formats')"
-          class="w-full flex items-center justify-between p-4 bg-gray-50 hover:bg-gray-100 transition-colors"
+          class="w-full flex items-center justify-between p-3 md:p-4 min-h-[48px] bg-gray-50 hover:bg-gray-100 active:bg-gray-200 transition-colors"
         >
           <div class="flex items-center gap-2">
             <svg class="w-5 h-5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -169,45 +169,68 @@ function handleEdit() {
           leave-from-class="opacity-100 max-h-96"
           leave-to-class="opacity-0 max-h-0"
         >
-          <div v-if="expandedSections.formats" class="overflow-x-auto overflow-hidden">
-            <table class="w-full text-sm">
-              <thead class="bg-gray-100">
-                <tr>
-                  <th class="px-4 py-2 text-left font-semibold text-gray-600">Support</th>
-                  <th class="px-4 py-2 text-left font-semibold text-gray-600">Format</th>
-                  <th class="px-4 py-2 text-right font-semibold text-gray-600">Tarif</th>
-                  <th class="px-4 py-2 text-right font-semibold text-gray-600">Qté</th>
-                  <th class="px-4 py-2 text-right font-semibold text-gray-600">Total</th>
-                </tr>
-              </thead>
-              <tbody class="divide-y divide-gray-100">
-                <tr v-for="(format, index) in mediaPlan.formatsProposés" :key="index" class="hover:bg-gray-50">
-                  <td class="px-4 py-3 text-gray-800">{{ format.support }}</td>
-                  <td class="px-4 py-3">
-                    <span class="font-medium text-gray-800">{{ format.format }}</span>
-                    <span class="text-xs text-gray-500 block">{{ format.dimensions }}</span>
-                  </td>
-                  <td class="px-4 py-3 text-right text-gray-600">{{ formatCurrency(format.tarifUnitaire) }}</td>
-                  <td class="px-4 py-3 text-right text-gray-600">{{ format.quantite }}</td>
-                  <td class="px-4 py-3 text-right font-semibold text-gray-800">{{ formatCurrency(format.total) }}</td>
-                </tr>
-              </tbody>
-            </table>
+          <div v-if="expandedSections.formats" class="overflow-hidden">
+            <!-- Mobile: Cards view -->
+            <div class="md:hidden p-3 space-y-2">
+              <div
+                v-for="(format, index) in mediaPlan.formatsProposés"
+                :key="index"
+                class="bg-gray-50 rounded-lg p-3"
+              >
+                <div class="flex justify-between items-start mb-2">
+                  <div>
+                    <span class="font-medium text-gray-800 text-sm">{{ format.support }}</span>
+                    <span class="text-xs text-gray-500 block">{{ format.format }}</span>
+                  </div>
+                  <span class="font-bold text-cm-red">{{ formatCurrency(format.total) }}</span>
+                </div>
+                <div class="flex justify-between text-xs text-gray-500">
+                  <span>{{ format.dimensions }}</span>
+                  <span>{{ format.quantite }} × {{ formatCurrency(format.tarifUnitaire) }}</span>
+                </div>
+              </div>
+            </div>
+            <!-- Desktop: Table view -->
+            <div class="hidden md:block overflow-x-auto">
+              <table class="w-full text-sm">
+                <thead class="bg-gray-100">
+                  <tr>
+                    <th class="px-4 py-2 text-left font-semibold text-gray-600">Support</th>
+                    <th class="px-4 py-2 text-left font-semibold text-gray-600">Format</th>
+                    <th class="px-4 py-2 text-right font-semibold text-gray-600">Tarif</th>
+                    <th class="px-4 py-2 text-right font-semibold text-gray-600">Qté</th>
+                    <th class="px-4 py-2 text-right font-semibold text-gray-600">Total</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-100">
+                  <tr v-for="(format, index) in mediaPlan.formatsProposés" :key="index" class="hover:bg-gray-50">
+                    <td class="px-4 py-3 text-gray-800">{{ format.support }}</td>
+                    <td class="px-4 py-3">
+                      <span class="font-medium text-gray-800">{{ format.format }}</span>
+                      <span class="text-xs text-gray-500 block">{{ format.dimensions }}</span>
+                    </td>
+                    <td class="px-4 py-3 text-right text-gray-600">{{ formatCurrency(format.tarifUnitaire) }}</td>
+                    <td class="px-4 py-3 text-right text-gray-600">{{ format.quantite }}</td>
+                    <td class="px-4 py-3 text-right font-semibold text-gray-800">{{ formatCurrency(format.total) }}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
           </div>
         </transition>
       </div>
 
       <!-- Calendrier -->
-      <div class="border border-gray-200 rounded-xl overflow-hidden">
+      <div class="border border-gray-200 rounded-lg md:rounded-xl overflow-hidden">
         <button
           @click="toggleSection('calendrier')"
-          class="w-full flex items-center justify-between p-4 bg-gray-50 hover:bg-gray-100 transition-colors"
+          class="w-full flex items-center justify-between p-3 md:p-4 min-h-[48px] bg-gray-50 hover:bg-gray-100 active:bg-gray-200 transition-colors"
         >
           <div class="flex items-center gap-2">
             <svg class="w-5 h-5 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
             </svg>
-            <span class="font-semibold text-gray-700">Calendrier de diffusion</span>
+            <span class="font-semibold text-gray-700 text-sm md:text-base">Calendrier de diffusion</span>
           </div>
           <svg
             :class="['w-5 h-5 text-gray-400 transition-transform', expandedSections.calendrier ? 'rotate-180' : '']"
@@ -226,14 +249,14 @@ function handleEdit() {
           leave-from-class="opacity-100 max-h-96"
           leave-to-class="opacity-0 max-h-0"
         >
-          <div v-if="expandedSections.calendrier" class="p-4 overflow-hidden">
-            <div class="flex gap-2">
+          <div v-if="expandedSections.calendrier" class="p-3 md:p-4 overflow-x-auto overflow-hidden">
+            <div class="flex gap-2 min-w-max md:min-w-0">
               <div
                 v-for="semaine in mediaPlan.calendrier"
                 :key="semaine.semaine"
-                class="flex-1 bg-gray-50 rounded-lg p-3"
+                class="flex-1 min-w-[120px] md:min-w-0 bg-gray-50 rounded-lg p-2 md:p-3"
               >
-                <div class="text-xs font-bold text-gray-500 mb-2">Semaine {{ semaine.semaine }}</div>
+                <div class="text-xs font-bold text-gray-500 mb-2">S{{ semaine.semaine }}</div>
                 <div class="space-y-1">
                   <div
                     v-for="action in semaine.actions"
@@ -241,7 +264,7 @@ function handleEdit() {
                     class="text-xs"
                   >
                     <span class="font-medium text-gray-700">{{ action.support }}:</span>
-                    <span class="text-gray-500 ml-1">{{ action.action }}</span>
+                    <span class="text-gray-500 ml-1 block md:inline">{{ action.action }}</span>
                   </div>
                 </div>
               </div>
@@ -251,10 +274,10 @@ function handleEdit() {
       </div>
 
       <!-- Chiffrage -->
-      <div class="border border-gray-200 rounded-xl overflow-hidden">
+      <div class="border border-gray-200 rounded-lg md:rounded-xl overflow-hidden">
         <button
           @click="toggleSection('chiffrage')"
-          class="w-full flex items-center justify-between p-4 bg-gray-50 hover:bg-gray-100 transition-colors"
+          class="w-full flex items-center justify-between p-3 md:p-4 min-h-[48px] bg-gray-50 hover:bg-gray-100 active:bg-gray-200 transition-colors"
         >
           <div class="flex items-center gap-2">
             <svg class="w-5 h-5 text-pink-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -279,17 +302,17 @@ function handleEdit() {
           leave-from-class="opacity-100 max-h-96"
           leave-to-class="opacity-0 max-h-0"
         >
-          <div v-if="expandedSections.chiffrage" class="p-4 space-y-4 overflow-hidden">
+          <div v-if="expandedSections.chiffrage" class="p-3 md:p-4 space-y-3 md:space-y-4 overflow-hidden">
             <!-- Total HT / TTC -->
-            <div class="bg-gradient-to-r from-cm-red to-cm-dark rounded-xl p-4 text-white">
-              <div class="flex justify-between items-end">
+            <div class="bg-gradient-to-r from-cm-red to-cm-dark rounded-lg md:rounded-xl p-3 md:p-4 text-white">
+              <div class="flex flex-col sm:flex-row justify-between gap-2 sm:items-end">
                 <div>
                   <div class="text-xs opacity-70 uppercase tracking-wider">Total HT</div>
-                  <div class="text-2xl font-bold">{{ formatCurrency(mediaPlan.chiffrage.totalHT) }}</div>
+                  <div class="text-xl md:text-2xl font-bold">{{ formatCurrency(mediaPlan.chiffrage.totalHT) }}</div>
                 </div>
-                <div class="text-right">
+                <div class="sm:text-right">
                   <div class="text-xs opacity-70 uppercase tracking-wider">Total TTC (TVA 20%)</div>
-                  <div class="text-2xl font-bold">{{ formatCurrency(mediaPlan.chiffrage.totalHT * 1.2) }}</div>
+                  <div class="text-xl md:text-2xl font-bold">{{ formatCurrency(mediaPlan.chiffrage.totalHT * 1.2) }}</div>
                 </div>
               </div>
               <div class="mt-2 pt-2 border-t border-white/20 text-xs opacity-70 text-right">
@@ -300,14 +323,14 @@ function handleEdit() {
             <!-- Par support -->
             <div>
               <h5 class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Par support</h5>
-              <div class="space-y-2">
+              <div class="grid grid-cols-2 md:grid-cols-1 gap-1.5 md:gap-2">
                 <div
                   v-for="(value, key) in mediaPlan.chiffrage.parSupport"
                   :key="key"
                   class="flex items-center justify-between p-2 bg-gray-50 rounded-lg"
                 >
-                  <span class="text-sm text-gray-600 capitalize">{{ key }}</span>
-                  <span class="font-semibold text-gray-800">{{ formatCurrency(value) }}</span>
+                  <span class="text-xs md:text-sm text-gray-600 capitalize">{{ key }}</span>
+                  <span class="font-semibold text-gray-800 text-sm">{{ formatCurrency(value) }}</span>
                 </div>
               </div>
             </div>
@@ -315,14 +338,14 @@ function handleEdit() {
             <!-- Par semaine -->
             <div>
               <h5 class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Par semaine</h5>
-              <div class="flex gap-2">
+              <div class="flex gap-1.5 md:gap-2 overflow-x-auto pb-1">
                 <div
                   v-for="semaine in mediaPlan.chiffrage.parSemaine"
                   :key="semaine.semaine"
-                  class="flex-1 text-center p-2 bg-gray-50 rounded-lg"
+                  class="flex-1 min-w-[60px] text-center p-2 bg-gray-50 rounded-lg"
                 >
                   <div class="text-xs text-gray-500">S{{ semaine.semaine }}</div>
-                  <div class="font-semibold text-gray-800 text-sm">{{ formatCurrency(semaine.montant) }}</div>
+                  <div class="font-semibold text-gray-800 text-xs md:text-sm">{{ formatCurrency(semaine.montant) }}</div>
                 </div>
               </div>
             </div>
