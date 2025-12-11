@@ -1,161 +1,194 @@
 {
+  "metadata": {
+    "source_file": "Corse Matin - Audience.xlsx",
+    "sheet_name": "2 TABLEAU 1",
+    "copyright": "Copyright © Carthage 2003-2018"
+  },
   "etude": {
     "nom": "OneNext cumul 2 ans 2023",
-    "cible": "Ensemble",
-    "global": {
-      "effectif_pondere": 53665000,
-      "pourcentage_total": 100,
-      "effectif_brut": 53104
-    }
+    "lnm": "Cible 1 : Ensemble",
+    "effectif_pondere_total": 53665000,
+    "pourcentage_total": 100,
+    "effectif_brut_total": 53104
   },
-
-  "corse_matin": {
+  "donnees_principales": {
+    "lnm_pondere": "Pondéré (000)",
+    "lnm_pqr": "LNM - PQR",
     "cible_ensemble": {
-      "effectif_pondere": 53665,
-      "pourcentage_total": null,
-      "effectif_brut": 147
+      "libelle": "Cible Ensemble",
+      "corse_matin": "Corse Matin",
+      "cible_ensemble_valeur": 53665,
+      "corse_matin_valeur": 147
     }
   },
-
   "sexe": {
-    "Homme": {
-      "effectif_pondere": 25693,
-      "effectif_brut": 66,
+    "homme": {
+      "categorie": "Homme",
+      "cible_ensemble": 25693,
+      "corse_matin_pondere": 66,
       "pourcentage_total": 44.8979591836735
     },
-    "Femme": {
-      "effectif_pondere": 27972,
-      "effectif_brut": 81,
+    "femme": {
+      "categorie": "Femme",
+      "cible_ensemble": 27972,
+      "corse_matin_pondere": 81,
       "pourcentage_total": 55.1020408163265
     }
   },
-
-  "age_5_classes": {
-    "15_24": {
-      "effectif_pondere": 7673,
-      "effectif_brut": 5,
-      "pourcentage_total": 3.35570469798658
+  "age": {
+    "tranches": {
+      "15_24_ans": {
+        "tranche": "15 à 24 ans",
+        "cible_ensemble": 7673,
+        "corse_matin_pondere": 5,
+        "effectif_brut": 5,
+        "pourcentage_effectif_brut": 3.35570469798658
+      },
+      "25_34_ans": {
+        "tranche": "25 à 34 ans",
+        "cible_ensemble": 7255,
+        "corse_matin_pondere": 19,
+        "effectif_brut": 19,
+        "pourcentage_effectif_brut": 12.751677852349
+      },
+      "35_49_ans": {
+        "tranche": "35 à 49 ans",
+        "cible_ensemble": 12135,
+        "corse_matin_pondere": 33,
+        "effectif_brut": 33,
+        "pourcentage_effectif_brut": 22.1476510067114
+      },
+      "50_64_ans": {
+        "tranche": "50 à 64 ans",
+        "cible_ensemble": 12617,
+        "corse_matin_pondere": 36,
+        "effectif_brut": 36,
+        "pourcentage_effectif_brut": 24.1610738255034
+      },
+      "65_ans_ou_plus": {
+        "tranche": "65 ans ou +",
+        "cible_ensemble": 13984,
+        "corse_matin_pondere": 56,
+        "effectif_brut": 56,
+        "pourcentage_effectif_brut": 37.5838926174497
+      }
     },
-    "25_34": {
-      "effectif_pondere": 7255,
-      "effectif_brut": 19,
-      "pourcentage_total": 12.751677852349
-    },
-    "35_49": {
-      "effectif_pondere": 12135,
-      "effectif_brut": 33,
-      "pourcentage_total": 22.1476510067114
-    },
-    "50_64": {
-      "effectif_pondere": 12617,
-      "effectif_brut": 36,
-      "pourcentage_total": 24.1610738255034
-    },
-    "65_plus": {
-      "effectif_pondere": 13984,
-      "effectif_brut": 56,
-      "pourcentage_total": 37.5838926174497
+    "cibles": {
+      "actifs": {
+        "categorie": "Cible Actifs",
+        "cible_ensemble": 29222,
+        "corse_matin_pondere": 72,
+        "pourcentage_total": 48.9795918367347,
+        "effectif_brut": 149
+      },
+      "inactifs": {
+        "categorie": "Cible Inactifs",
+        "cible_ensemble": 24443,
+        "corse_matin_pondere": 75,
+        "pourcentage_total": 51.0204081632653
+      }
     }
   },
-
-  "actifs_inactifs": {
-    "Actifs": {
-      "effectif_pondere": 29222,
-      "effectif_brut": 72,
-      "pourcentage_total": 48.9795918367347,
-      "extra": 149
+  "pcs": {
+    "categories": {
+      "agriculteurs": {
+        "categorie": "Agriculteurs exploitants",
+        "cible_ensemble": 366,
+        "corse_matin_pondere": 1,
+        "effectif_brut": 1,
+        "pourcentage_effectif_brut": 0.675675675675676
+      },
+      "artisans_commercants": {
+        "categorie": "Artisans, commerçants",
+        "cible_ensemble": 1800,
+        "corse_matin_pondere": 6,
+        "effectif_brut": 6,
+        "pourcentage_effectif_brut": 4.05405405405405
+      },
+      "cadres_professions_superieures": {
+        "categorie": "Chefs d'entreprises, cadres et professions intellectuelles supérieures",
+        "cible_ensemble": 6034,
+        "corse_matin_pondere": 15,
+        "effectif_brut": 15,
+        "pourcentage_effectif_brut": 10.1351351351351
+      },
+      "professions_intermediaires": {
+        "categorie": "Professions intermédiaires",
+        "cible_ensemble": 7534,
+        "corse_matin_pondere": 11,
+        "effectif_brut": 11,
+        "pourcentage_effectif_brut": 7.43243243243243
+      },
+      "employes": {
+        "categorie": "Employés",
+        "cible_ensemble": 7748,
+        "corse_matin_pondere": 26,
+        "effectif_brut": 26,
+        "pourcentage_effectif_brut": 17.5675675675676
+      },
+      "ouvriers": {
+        "categorie": "Ouvriers",
+        "cible_ensemble": 5739,
+        "corse_matin_pondere": 13,
+        "effectif_brut": 13,
+        "pourcentage_effectif_brut": 8.78378378378378
+      },
+      "retraites": {
+        "categorie": "Retraités",
+        "cible_ensemble": 14371,
+        "corse_matin_pondere": 50,
+        "effectif_brut": 50,
+        "pourcentage_effectif_brut": 33.7837837837838
+      },
+      "inactifs": {
+        "categorie": "Inactifs",
+        "cible_ensemble": 10073,
+        "corse_matin_pondere": 26,
+        "effectif_brut": 26,
+        "pourcentage_effectif_brut": 17.5675675675676
+      }
     },
-    "Inactifs": {
-      "effectif_pondere": 24443,
-      "effectif_brut": 75,
-      "pourcentage_total": 51.0204081632653,
-      "extra": null
-    }
-  },
-
-  "pcs_individu_8_classes": {
-    "Agriculteurs exploitants": {
-      "effectif_pondere": 366,
-      "effectif_brut": 1,
-      "pourcentage_total": 0.675675675675676
-    },
-    "Artisans commerçants": {
-      "effectif_pondere": 1800,
-      "effectif_brut": 6,
-      "pourcentage_total": 4.05405405405405
-    },
-    "Chefs entreprises cadres prof intellectuelles": {
-      "effectif_pondere": 6034,
-      "effectif_brut": 15,
-      "pourcentage_total": 10.1351351351351
-    },
-    "Professions intermédiaires": {
-      "effectif_pondere": 7534,
-      "effectif_brut": 11,
-      "pourcentage_total": 7.43243243243243
-    },
-    "Employés": {
-      "effectif_pondere": 7748,
-      "effectif_brut": 26,
-      "pourcentage_total": 17.5675675675676
-    },
-    "Ouvriers": {
-      "effectif_pondere": 5739,
-      "effectif_brut": 13,
-      "pourcentage_total": 8.78378378378378
-    },
-    "Retraités": {
-      "effectif_pondere": 14371,
-      "effectif_brut": 50,
-      "pourcentage_total": 33.7837837837838
-    },
-    "Inactifs": {
-      "effectif_pondere": 10073,
-      "effectif_brut": 26,
-      "pourcentage_total": 17.5675675675676
-    },
-    "CSP_plus": {
-      "effectif_pondere": 15369,
-      "effectif_brut": 32,
+    "csp_plus": {
+      "categorie": "(G) CSP+",
+      "cible_ensemble": 15369,
+      "corse_matin_pondere": 32,
       "pourcentage_total": 21.7687074829932,
-      "extra": 148
+      "effectif_brut": 148
     }
   },
-
-  "regions_13": {
-    "Corse": {
-      "effectif_pondere": 293,
-      "effectif_brut": 124,
-      "pourcentage_total": null
-    }
-  },
-
-  "departements_residence": {
-    "20_Corse": {
-      "effectif_pondere": 293,
-      "effectif_brut": 124,
-      "pourcentage_total": null
-    }
-  },
-
-  "departements_lieux_de_vie": {
-    "20_Corse": {
-      "effectif_pondere": 391,
-      "effectif_brut": 42,
-      "pourcentage_total": null
-    }
-  },
-
-  "zones_diffusion": {
-    "GROUPE_PROVENCE": {
-      "effectif_pondere": 2573,
-      "effectif_brut": 129,
-      "pourcentage_total": null
+  "geographie": {
+    "regions": {
+      "corse": {
+        "region": "Corse",
+        "cible_ensemble": 293,
+        "corse_matin_pondere": 124
+      }
     },
-    "LA_PROVENCE": {
-      "effectif_pondere": 2281,
-      "effectif_brut": 5,
-      "pourcentage_total": null
+    "departements_residence": {
+      "20_corse": {
+        "departement": "20 Corse",
+        "cible_ensemble": 293,
+        "corse_matin_pondere": 124
+      }
+    },
+    "departements_lieux_vie": {
+      "20_corse_lieux_vie": {
+        "departement": "20 - CORSE",
+        "cible_ensemble": 391,
+        "corse_matin_pondere": 42
+      }
+    },
+    "zones_diffusion": {
+      "groupe_provence": {
+        "zone": "GROUPE PROVENCE",
+        "cible_ensemble": 2573,
+        "corse_matin_pondere": 129
+      },
+      "la_provence": {
+        "zone": "LA PROVENCE",
+        "cible_ensemble": 2281,
+        "corse_matin_pondere": 5
+      }
     }
   }
 }
