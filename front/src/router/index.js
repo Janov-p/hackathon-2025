@@ -13,6 +13,11 @@ const router = createRouter({
       path: '/items',
       name: 'items',
       component: () => import('../views/ItemsView.vue')
+    },
+    {
+      path: '/export',
+      name: 'export',
+      component: () => import('../views/PdfExportView.vue')
     }
   ]
 })
