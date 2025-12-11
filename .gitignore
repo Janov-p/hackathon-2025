@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # Dependencies
 node_modules/
 .pnp
@@ -52,7 +51,6 @@ coverage/
 *.pem
 .vercel
 .netlify
-=======
 # =========================
 # Python (Backend)
 # =========================
@@ -126,4 +124,3 @@ htmlcov/
 *.bak
 *.tmp
 *.temp
->>>>>>> backend
