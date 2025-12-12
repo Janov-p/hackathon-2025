@@ -22,7 +22,7 @@ function goToExport() {
   }
   localStorage.setItem('exportData', JSON.stringify(exportData))
   
-  window.open('/export', '_blank')
+  window.open('/hackathon/export', '_blank')
 }
 </script>
 
