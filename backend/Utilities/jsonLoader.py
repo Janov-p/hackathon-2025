@@ -1,20 +1,27 @@
 import json
 
-def loader(filePath:str)->dict:
+def loader(filePath_or_data):
     """Charge un fichier JSON et rend ces données sous la forme d'un dictionnaire de dictionnaires
+    ou retourne directement les données si c'est déjà un dictionnaire.
 
     Args:
-        filePath (str): Chemin d'accès du fichier
+        filePath_or_data (str ou dict): Chemin d'accès du fichier ou données déjà chargées
 
     Returns:
-        dict: Dictionnaire avec l'ensemble des données du JSON
+        dict: Dictionnaire avec l'ensemble des données
     """
-    try:
-        with open(filePath, "r", encoding="utf-8") as f:
-            data = json.load(f)
-        return data
-    except:
-        print("Erreur, impossible d'ouvrir le fichier")
+    if isinstance(filePath_or_data, dict):
+        return filePath_or_data
+    elif isinstance(filePath_or_data, str):
+        try:
+            with open(filePath_or_data, "r", encoding="utf-8") as f:
+                data = json.load(f)
+            return data
+        except:
+            print("Erreur, impossible d'ouvrir le fichier")
+            return {}
+    else:
+        print("Erreur, type non supporté")
         return {}
 
 def collect_subdicts_with_paths(obj):

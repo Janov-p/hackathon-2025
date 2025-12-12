@@ -136,9 +136,10 @@ def project_structure():
 # ==================== ROUTES KPI ====================
 
 @kpi_bp.route('/kpi/extract', methods=['POST'])
+@kpi_bp.route('/kpi/extract', methods=['POST'])
 def extract_kpi():
     """
-    Extraire des KPI depuis un fichier JSON
+    Extraire des KPI depuis un fichier JSON ou depuis des données JSON directes
     """
     modules = import_utilities()
     
@@ -155,24 +156,28 @@ def extract_kpi():
         if not data:
             return jsonify({"error": "Données JSON requises"}), 400
         
-        if "filename" not in data:
-            return jsonify({"error": "Nom de fichier requis"}), 400
+        # Vérifier si on a des données JSON directes ou un fichier
+        if "json_data" in data:
+            json_content = data["json_data"]
+            filename = "direct_json"
+        elif "filename" in data:
+            filename = data["filename"]
+            config = get_config()
+            filepath = os.path.join(config['db_path'], filename)
+            
+            if not os.path.exists(filepath):
+                available = [f for f in os.listdir(config['db_path']) 
+                            if f.endswith('.json')]
+                return jsonify({
+                    "error": f"Fichier {filename} non trouvé",
+                    "available_files": available
+                }), 404
+            json_content = filepath
+        else:
+            return jsonify({"error": "Soit 'filename' soit 'json_data' doit être fourni"}), 400
         
-        filename = data["filename"]
-        config = get_config()
-        filepath = os.path.join(config['db_path'], filename)
-        
-        if not os.path.exists(filepath):
-            available = [f for f in os.listdir(config['db_path']) 
-                        if f.endswith('.json')]
-            return jsonify({
-                "error": f"Fichier {filename} non trouvé",
-                "available_files": available
-            }), 404
-        
-        # Charger et simplifier les données
         target = data.get("target")
-        simplified_data = modules['jsonLoader'].simplification(filepath, target)
+        simplified_data = modules['jsonLoader'].simplification(json_content, target)
         
         if not simplified_data:
             return jsonify({
@@ -208,10 +213,16 @@ def extract_kpi():
                         "value": None
                     })
         
-        # Obtenir la structure pour référence
-        full_data = modules['jsonLoader'].loader(filepath)
-        all_paths = modules['jsonLoader'].collect_subdicts_with_paths(full_data)
-        available_paths = modules['jsonLoader'].getDataPathNames(all_paths)
+        # Obtenir la structure pour référence (uniquement pour les fichiers)
+        if isinstance(json_content, str) and json_content != "direct_json":
+            full_data = modules['jsonLoader'].loader(json_content)
+            all_paths = modules['jsonLoader'].collect_subdicts_with_paths(full_data)
+            available_paths = modules['jsonLoader'].getDataPathNames(all_paths)
+        else:
+            # Pour les données directes, on essaie de collecter les chemins
+            full_data = modules['jsonLoader'].loader(json_content)
+            all_paths = modules['jsonLoader'].collect_subdicts_with_paths(full_data)
+            available_paths = modules['jsonLoader'].getDataPathNames(all_paths)
         
         return jsonify({
             "filename": filename,
@@ -357,6 +368,7 @@ def get_available_fields(filename):
 def calculate_prevision():
     """
     Effectuer des prévisions avec le module prevision
+    Accepte soit un fichier (filename) soit des données JSON (json_data)
     """
     modules = import_utilities()
     
@@ -370,17 +382,25 @@ def calculate_prevision():
             return jsonify({"error": "Données JSON requises"}), 400
         
         # Vérifier les paramètres requis
-        required = ['filename', 'target', 'kpi_name']
+        required = ['target', 'kpi_name']
         for field in required:
             if field not in data:
                 return jsonify({"error": f"Champ requis manquant: {field}"}), 400
         
-        filename = data['filename']
-        config = get_config()
-        filepath = os.path.join(config['db_path'], filename)
-        
-        if not os.path.exists(filepath):
-            return jsonify({"error": f"Fichier {filename} non trouvé"}), 404
+        # Vérifier si on a des données JSON directes ou un fichier
+        if "json_data" in data:
+            json_content = data["json_data"]
+            filename = "direct_json"
+        elif "filename" in data:
+            filename = data['filename']
+            config = get_config()
+            filepath = os.path.join(config['db_path'], filename)
+            
+            if not os.path.exists(filepath):
+                return jsonify({"error": f"Fichier {filename} non trouvé"}), 404
+            json_content = filepath
+        else:
+            return jsonify({"error": "Soit 'filename' soit 'json_data' doit être fourni"}), 400
         
         # Charger les données
         modules['jsonLoader'] = import_utilities()['jsonLoader']
@@ -389,7 +409,7 @@ def calculate_prevision():
         
         # Simplifier les données
         simplified_data = modules['jsonLoader'].simplification(
-            filepath, 
+            json_content, 
             data['target']
         )
         
@@ -815,6 +835,7 @@ def calculate_kpi_targets(budget, allocation, target_mode):
 def generate_media_plan():
     """
     Générer un plan média avec répartition intelligente
+    Accepte soit un fichier (campaign_file) soit des données JSON (campaign_data)
     """
     try:
         data = request.get_json()
@@ -822,20 +843,23 @@ def generate_media_plan():
         if not data:
             return jsonify({"error": "Données JSON requises"}), 400
         
-        # Vérifier le fichier de campagne
-        campaign_file = data.get('campaign_file')
-        if not campaign_file:
-            return jsonify({"error": "Fichier de campagne requis"}), 400
-        
-        config = get_config()
-        campaign_path = os.path.join(config['db_path'], campaign_file)
-        
-        if not os.path.exists(campaign_path):
-            return jsonify({"error": f"Fichier {campaign_file} non trouvé"}), 404
-        
-        # Charger la campagne
-        with open(campaign_path, 'r', encoding='utf-8') as f:
-            campaign = json.load(f)
+        # Vérifier si on a des données JSON directes ou un fichier
+        if "campaign_data" in data:
+            campaign = data["campaign_data"]
+            campaign_source = "direct_json"
+        elif "campaign_file" in data:
+            campaign_file = data['campaign_file']
+            config = get_config()
+            campaign_path = os.path.join(config['db_path'], campaign_file)
+            
+            if not os.path.exists(campaign_path):
+                return jsonify({"error": f"Fichier {campaign_file} non trouvé"}), 404
+            
+            with open(campaign_path, 'r', encoding='utf-8') as f:
+                campaign = json.load(f)
+            campaign_source = campaign_file
+        else:
+            return jsonify({"error": "Soit 'campaign_file' soit 'campaign_data' doit être fourni"}), 400
         
         # Extraire les informations
         form_data = campaign.get('formData', {})
@@ -937,6 +961,7 @@ def generate_media_plan():
         return jsonify({
             "message": "Plan média généré avec succès",
             "allocation_mode": allocation_mode,
+            "campaign_source": campaign_source,
             "media_plan": media_plan
         }), 200
         
