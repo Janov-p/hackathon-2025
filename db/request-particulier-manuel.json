@@ -1,0 +1,37 @@
+{
+  "targetMode": "particuliers",
+  "repartitionMode": "manuel",
+  "formData": {
+    "nomClient": "Jean Dupont",
+    "matriculeCommercial": "CM-2025-001",
+    "nom": "Campagne Été 2025",
+    "secteur": "Tourisme",
+    "periodeDebut": "2025-06-01",
+    "periodeFin": "2025-08-31",
+    "zones": ["Corse-du-Sud", "Haute-Corse"],
+    "microZones": ["Ajaccio", "Bastia", "Porto-Vecchio"],
+    "objectifs": ["notoriete", "trafic", "conversion"],
+    "budget": 15000,
+
+    "cible": {
+      "ages": ["25-34", "35-44", "45-54"],
+      "sexe": "mixte",
+      "csp": ["CSP+", "CSP-"],
+      "centresInteret": ["voyage", "gastronomie", "nature"]
+    },
+
+    "repartition": {
+      "print": 30,
+      "digital": 40,
+      "reseaux": 20,
+      "event": 10
+    },
+
+    "supports": {
+      "print": ["quotidien", "magazine"],
+      "digital": ["site-web", "newsletter"],
+      "reseauxSociaux": ["facebook", "instagram"],
+      "events": []
+    }
+  }
+}

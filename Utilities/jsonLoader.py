@@ -1,4 +1,6 @@
 import json
+import os, sys
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__ ),'..', 'db')))
 
 def loader(filePath:str)->dict:
     """Charge un fichier JSON et rend ces données sous la forme d'un dictionnaire de dictionnaires
@@ -65,3 +67,9 @@ def getDataPathNames(data:list):
         list: Ensemble des champs de recherche disponible
     """
     return [i[0][-1] for i in data if i[0] != []]
+
+def simplification(json:str, choice:str=None):
+    if choice:
+        return collectData(collect_subdicts_with_paths(loader(json)), choice)
+    else:
+        return collect_subdicts_with_paths(loader(json))
