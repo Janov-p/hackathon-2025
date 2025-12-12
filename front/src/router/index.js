@@ -18,6 +18,11 @@ const router = createRouter({
       path: '/export',
       name: 'export',
       component: () => import('../views/PdfExportView.vue')
+    },
+    {
+      path: '/kpi-export',
+      name: 'kpi-export',
+      component: () => import('../views/KpiExportView.vue')
     }
   ]
 })

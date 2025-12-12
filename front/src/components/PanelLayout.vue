@@ -20,7 +20,7 @@ defineProps({
 </script>
 
 <template>
-  <div class="h-[calc(100%-56px)] md:h-full flex flex-col md:flex-row gap-2 md:gap-4 p-2 md:p-4 bg-cm-gray overflow-auto md:overflow-hidden">
+  <div class="h-[calc(100%-56px)] md:h-full flex flex-col md:flex-row gap-3 md:gap-6 p-3 md:p-6 bg-cm-gray overflow-auto md:overflow-hidden">
     <!-- Panneau gauche (Config campagne) - Hidden in edit mode (v-show to preserve state) -->
     <div 
       v-show="!editMode" 
@@ -120,29 +120,29 @@ defineProps({
   .md\:panel-cutout-bottom::after {
     content: '';
     position: absolute;
-    bottom: -12px;
+    bottom: -10px;
     left: 50%;
     transform: translateX(-50%);
-    width: 200px;
-    height: 40px;
+    width: 160px;
+    height: 38px;
     background-color: rgb(229, 231, 235);
-    border-radius: 100px 100px 0 0;
+    border-radius: 80px 80px 0 0;
     z-index: 20;
-    box-shadow: inset 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    box-shadow: inset 0 8px 12px -3px rgba(0, 0, 0, 0.1);
   }
 
   .md\:panel-cutout-top::before {
     content: '';
     position: absolute;
-    top: -12px;
+    top: -10px;
     left: 50%;
     transform: translateX(-50%);
-    width: 200px;
-    height: 40px;
+    width: 160px;
+    height: 38px;
     background-color: rgb(229, 231, 235);
-    border-radius: 0 0 100px 100px;
+    border-radius: 0 0 80px 80px;
     z-index: 20;
-    box-shadow: inset 0 -10px 15px -3px rgba(0, 0, 0, 0.1);
+    box-shadow: inset 0 -8px 12px -3px rgba(0, 0, 0, 0.1);
   }
 }
 </style>

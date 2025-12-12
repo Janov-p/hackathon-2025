@@ -33,7 +33,7 @@ function goToExport() {
     :class="[
       'group flex items-center gap-2 px-6 py-3 rounded-full font-semibold shadow-lg transition-all duration-300',
       isEnabled
-        ? 'bg-gradient-to-r from-[rgb(226,0,26)] to-[rgb(35,35,36)] text-white hover:shadow-xl hover:scale-105 cursor-pointer'
+        ? 'bg-cm-red text-white hover:shadow-xl hover:scale-105 cursor-pointer'
         : 'bg-gray-200 text-gray-400 cursor-not-allowed'
     ]"
   >
@@ -50,6 +50,6 @@ function goToExport() {
         d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
       />
     </svg>
-    <span>Exporter PDF</span>
+    <span>Exporter</span>
   </button>
 </template>

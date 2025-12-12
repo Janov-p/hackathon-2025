@@ -8,6 +8,7 @@ import KpiPanel from './components/results/KpiPanel.vue'
 import MediaPlanPanel from './components/results/MediaPlanPanel.vue'
 import MediaPlanEditMode from './components/results/MediaPlanEditMode.vue'
 import ExportButton from './components/ExportButton.vue'
+import Mode2SimulationKPI from './views/Mode2SimulationKPI.vue'
 import LoginModal from './components/LoginModal.vue'
 import CampaignActions from './components/CampaignActions.vue'
 import { useCampaignStore } from './stores/campaign'
@@ -18,8 +19,13 @@ const navbar = ref(null)
 const store = useCampaignStore()
 const { lastUpdate, isComplete, isEditingPlan } = storeToRefs(store)
 
-// Check if we're on the export page
-const isExportPage = computed(() => route.path === '/export')
+// Check if we're on a standalone page (export pages)
+const isStandalonePage = computed(() => 
+  route.path === '/export' || route.path === '/kpi-export'
+)
+
+// Get current mode from navbar
+const currentMode = computed(() => navbar.value?.currentMode || 'elaboration')
 
 // Track panel update animations
 const kpiUpdating = ref(false)
@@ -46,14 +52,21 @@ watch(lastUpdate, () => {
 </script>
 
 <template>
-  <!-- Export page - full screen without navbar -->
-  <router-view v-if="isExportPage" />
+  <!-- Standalone pages - full screen without navbar -->
+  <router-view v-if="isStandalonePage" />
 
   <!-- Main app layout -->
   <div v-else class="h-screen flex flex-col bg-cm-gray overflow-hidden">
     <Navbar ref="navbar" class="flex-shrink-0" />
     <LoginModal />
-    <div class="flex-1 min-h-0 relative">
+    
+    <!-- Mode KPI: Simulation KPI -->
+    <div v-if="currentMode === 'kpi'" class="flex-1 min-h-0 overflow-auto">
+      <Mode2SimulationKPI />
+    </div>
+    
+    <!-- Mode Elaboration: Layout principal -->
+    <div v-else class="flex-1 min-h-0 relative">
       <PanelLayout
         left-title="Configuration de la campagne"
         :top-right-title="topRightTitle"
@@ -94,7 +107,7 @@ watch(lastUpdate, () => {
         leave-from-class="opacity-100"
         leave-to-class="opacity-0"
       >
-        <div v-if="!isEditingPlan" class="hidden md:block absolute top-1/2 translate-x-1/2 -translate-y-1/2 z-20" style="right: calc(25% + 4px)">
+        <div v-if="!isEditingPlan" class="hidden md:block absolute right-[25%] top-1/2 translate-x-1/2 -translate-y-1/2 z-20">
           <ExportButton />
         </div>
       </transition>

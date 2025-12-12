@@ -1,6 +1,7 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
+import * as XLSX from 'xlsx'
 
 const router = useRouter()
 
@@ -68,6 +69,95 @@ function goBack() {
 
 function printPdf() {
   window.print()
+}
+
+function exportToExcel() {
+  const wb = XLSX.utils.book_new()
+  const campaignName = formData.value.nom || 'Plan-Media'
+
+  // === Feuille 1: Supports recommandés ===
+  const supportsData = [
+    ['PLAN MÉDIA - SUPPORTS RECOMMANDÉS'],
+    [''],
+    ['Campagne:', campaignName],
+    ['Date:', new Date().toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })],
+    [''],
+    ['Type', 'Nom', 'Justification']
+  ]
+  mediaPlan.value.supportsRecommandes.forEach(support => {
+    supportsData.push([support.type, support.nom, support.justification])
+  })
+  const wsSupports = XLSX.utils.aoa_to_sheet(supportsData)
+  wsSupports['!cols'] = [{ wch: 18 }, { wch: 25 }, { wch: 50 }]
+  XLSX.utils.book_append_sheet(wb, wsSupports, 'Supports')
+
+  // === Feuille 2: Formats proposés ===
+  const formatsData = [
+    ['FORMATS PROPOSÉS'],
+    [''],
+    ['Support', 'Format', 'Dimensions', 'Tarif unitaire (€)', 'Quantité', 'Total (€)']
+  ]
+  let totalFormats = 0
+  mediaPlan.value.formatsProposés.forEach(format => {
+    formatsData.push([
+      format.support,
+      format.format,
+      format.dimensions,
+      format.tarifUnitaire,
+      format.quantite,
+      format.total
+    ])
+    totalFormats += format.total
+  })
+  formatsData.push([])
+  formatsData.push(['', '', '', '', 'TOTAL', totalFormats])
+  const wsFormats = XLSX.utils.aoa_to_sheet(formatsData)
+  wsFormats['!cols'] = [{ wch: 15 }, { wch: 15 }, { wch: 15 }, { wch: 18 }, { wch: 10 }, { wch: 12 }]
+  XLSX.utils.book_append_sheet(wb, wsFormats, 'Formats')
+
+  // === Feuille 3: KPI ===
+  const kpiData = [
+    ['INDICATEURS DE PERFORMANCE (KPI)'],
+    [''],
+    ['Indicateur', 'Valeur'],
+    ['Audience Cumulée', kpiResults.value.audienceCumulee],
+    ['Taux de Couverture', `${kpiResults.value.tauxCouverture}%`],
+    ['Fréquence Moyenne', `${kpiResults.value.frequenceMoyenne}x`],
+    ['GRP', kpiResults.value.grp],
+    ['Impressions', kpiResults.value.impressions],
+    ['Clics Estimés', kpiResults.value.clicsEstimes]
+  ]
+  const wsKpi = XLSX.utils.aoa_to_sheet(kpiData)
+  wsKpi['!cols'] = [{ wch: 25 }, { wch: 20 }]
+  XLSX.utils.book_append_sheet(wb, wsKpi, 'KPI')
+
+  // === Feuille 4: Chiffrage ===
+  const chiffrageData = [
+    ['CHIFFRAGE'],
+    [''],
+    ['Brut HT', brutHT.value, '€']
+  ]
+  if (remise.value.active && remise.value.visible) {
+    chiffrageData.push(['Remise', -montantRemise.value, '€'])
+  }
+  chiffrageData.push(
+    ['Net HT', netHT.value, '€'],
+    ['TVA (20%)', tva.value, '€'],
+    ['Total TTC', totalTTC.value, '€'],
+    [''],
+    ['=== RÉPARTITION PAR SUPPORT ==='],
+    ['Support', 'Montant (€)']
+  )
+  Object.entries(mediaPlan.value.chiffrage.parSupport).forEach(([key, value]) => {
+    chiffrageData.push([key, value])
+  })
+  const wsChiffrage = XLSX.utils.aoa_to_sheet(chiffrageData)
+  wsChiffrage['!cols'] = [{ wch: 25 }, { wch: 15 }, { wch: 5 }]
+  XLSX.utils.book_append_sheet(wb, wsChiffrage, 'Chiffrage')
+
+  // Télécharger le fichier
+  const fileName = `plan-media-${campaignName.replace(/[^a-zA-Z0-9]/g, '-')}-${new Date().toISOString().split('T')[0]}.xlsx`
+  XLSX.writeFile(wb, fileName)
 }
 
 async function sendEmail() {
@@ -139,26 +229,37 @@ async function sendEmail() {
         </button>
 
         <div class="flex flex-col md:flex-row items-stretch md:items-center gap-2 md:gap-3">
+          <!-- Bouton Excel -->
+          <button
+            @click="exportToExcel"
+            class="flex items-center justify-center gap-2 px-4 md:px-5 py-3 md:py-2.5 min-h-[48px] bg-emerald-50 border-2 border-emerald-500 text-emerald-700 rounded-lg font-semibold hover:bg-emerald-600 hover:text-white hover:border-emerald-600 active:scale-[0.98] transition-all"
+          >
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+            </svg>
+            <span>Excel</span>
+          </button>
+
+          <!-- Bouton PDF -->
+          <button
+            @click="printPdf"
+            class="flex items-center justify-center gap-2 px-4 md:px-5 py-3 md:py-2.5 min-h-[48px] bg-red-50 border-2 border-cm-red text-cm-red rounded-lg font-semibold hover:bg-cm-red hover:text-white hover:border-cm-red active:scale-[0.98] transition-all"
+          >
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+            </svg>
+            <span>PDF</span>
+          </button>
+
           <!-- Bouton Envoyer par email -->
           <button
             @click="showEmailModal = true"
-            class="flex items-center justify-center gap-2 px-4 md:px-5 py-3 md:py-2.5 min-h-[48px] bg-white border-2 border-cm-red text-cm-red rounded-lg font-semibold hover:bg-cm-red hover:text-white active:scale-[0.98] transition-all"
+            class="flex items-center justify-center gap-2 px-4 md:px-5 py-3 md:py-2.5 min-h-[48px] bg-white border-2 border-gray-300 text-gray-700 rounded-lg font-semibold hover:bg-gray-100 active:scale-[0.98] transition-all"
           >
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
             </svg>
-            <span>Envoyer par email</span>
-          </button>
-
-          <!-- Bouton Imprimer -->
-          <button
-            @click="printPdf"
-            class="flex items-center justify-center gap-2 px-4 md:px-5 py-3 md:py-2.5 min-h-[48px] bg-cm-red text-white rounded-lg font-semibold hover:bg-cm-dark active:scale-[0.98] transition-all"
-          >
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
-            </svg>
-            <span>Imprimer / PDF</span>
+            <span>Email</span>
           </button>
         </div>
         
