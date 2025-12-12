@@ -1,6 +1,7 @@
 <script setup>
 import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
+import * as XLSX from 'xlsx'
 
 const router = useRouter()
 
@@ -340,12 +341,142 @@ function handleFileImport(event) {
   // Reset input pour permettre de réimporter le même fichier
   event.target.value = ''
 }
+
+function exportToExcel() {
+  if (!kpiResults.value) return
+
+  // Créer le workbook
+  const wb = XLSX.utils.book_new()
+
+  // === Feuille 1: Résumé KPI ===
+  const kpiData = [
+    ['RAPPORT KPI - PLAN MÉDIA'],
+    [''],
+    ['Campagne:', campaignName.value],
+    ['Date de génération:', new Date().toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })],
+    [''],
+    ['=== IMPACT & EXPOSITION ==='],
+    ['Audience Cumulée (dédupliquée)', kpiResults.value.audienceCumuleeDedupliquee, 'contacts uniques'],
+    ['Taux de Couverture', `${kpiResults.value.tauxCouverture.toFixed(1)}%`, 'reach'],
+    ['Fréquence Moyenne', `${kpiResults.value.frequenceMoyenne.toFixed(1)}×`, 'expositions/personne'],
+    ['GRP', kpiResults.value.grp.toFixed(1), 'points'],
+    ['Impressions Totales', kpiResults.value.totalImpressions, ''],
+    ['Vues Vidéo', kpiResults.value.vuesVideoTotal, 'estimées'],
+    [''],
+    ['=== EFFICACITÉ FINANCIÈRE ==='],
+    ['Budget Total', kpiResults.value.totalCost, '€'],
+    ['CPM Moyen', kpiResults.value.cpmMoyen.toFixed(2), '€'],
+    ['Coût GRP', kpiResults.value.coutGRP.toFixed(2), '€'],
+    ['Clics Estimés', kpiResults.value.totalClics, ''],
+    ['CTR Moyen', `${kpiResults.value.ctrMoyen.toFixed(2)}%`, ''],
+    [''],
+    ['=== RÉPARTITION PAR SUPPORT ==='],
+    ['Support', 'Budget (€)', 'Part (%)', 'Impressions', 'Clics'],
+  ]
+
+  // Ajouter les données par support
+  Object.entries(kpiResults.value.bySupport).forEach(([type, data]) => {
+    if (data.items > 0) {
+      kpiData.push([
+        getTypeName(type),
+        data.cost.toFixed(2),
+        `${kpiResults.value.repartitionBudget[type].toFixed(1)}%`,
+        data.impressions,
+        data.clics
+      ])
+    }
+  })
+
+  const wsKPI = XLSX.utils.aoa_to_sheet(kpiData)
+  
+  // Définir les largeurs de colonnes
+  wsKPI['!cols'] = [
+    { wch: 35 },
+    { wch: 20 },
+    { wch: 20 },
+    { wch: 15 },
+    { wch: 15 }
+  ]
+
+  XLSX.utils.book_append_sheet(wb, wsKPI, 'Résumé KPI')
+
+  // === Feuille 2: Détail du Plan Média ===
+  const detailHeaders = ['Support', 'Format', 'Quantité', 'CPM (€)', 'Impressions', 'Coût (€)']
+  const detailData = [detailHeaders]
+
+  mediaItems.value.forEach(item => {
+    const impressions = item.baseImpressions * item.quantity
+    const cpm = item.customPrice || item.baseCPM
+    const cost = (impressions / 1000) * cpm
+    
+    detailData.push([
+      getTypeName(item.type),
+      item.formatName,
+      item.quantity,
+      cpm.toFixed(2),
+      impressions,
+      cost.toFixed(2)
+    ])
+  })
+
+  // Ajouter la ligne total
+  detailData.push([])
+  detailData.push([
+    'TOTAL',
+    '',
+    mediaItems.value.reduce((sum, item) => sum + item.quantity, 0),
+    '',
+    kpiResults.value.totalImpressions,
+    kpiResults.value.totalCost.toFixed(2)
+  ])
+
+  const wsDetail = XLSX.utils.aoa_to_sheet(detailData)
+  
+  // Définir les largeurs de colonnes
+  wsDetail['!cols'] = [
+    { wch: 18 },
+    { wch: 25 },
+    { wch: 12 },
+    { wch: 12 },
+    { wch: 15 },
+    { wch: 15 }
+  ]
+
+  XLSX.utils.book_append_sheet(wb, wsDetail, 'Détail Plan Média')
+
+  // === Feuille 3: Données pour réimport ===
+  const importHeaders = ['Type', 'Format', 'Quantité', 'CPM personnalisé']
+  const importData = [importHeaders]
+
+  mediaItems.value.forEach(item => {
+    importData.push([
+      getTypeName(item.type),
+      item.formatName,
+      item.quantity,
+      item.customPrice || ''
+    ])
+  })
+
+  const wsImport = XLSX.utils.aoa_to_sheet(importData)
+  wsImport['!cols'] = [
+    { wch: 18 },
+    { wch: 25 },
+    { wch: 12 },
+    { wch: 18 }
+  ]
+
+  XLSX.utils.book_append_sheet(wb, wsImport, 'Import Template')
+
+  // Générer et télécharger le fichier
+  const fileName = `plan-media-${campaignName.value.replace(/[^a-zA-Z0-9]/g, '-')}-${new Date().toISOString().split('T')[0]}.xlsx`
+  XLSX.writeFile(wb, fileName)
+}
 </script>
 
 <template>
-  <div class="h-full flex flex-col md:flex-row gap-3 md:gap-6 p-3 md:p-6 bg-cm-gray">
+  <div class="min-h-full md:h-full flex flex-col md:flex-row gap-3 md:gap-6 p-3 md:p-6 pb-6 bg-cm-gray overflow-auto md:overflow-hidden">
     <!-- Panneau gauche : Configuration -->
-    <div class="w-full md:w-1/2 flex flex-col min-h-0">
+    <div class="w-full md:w-1/2 flex flex-col md:min-h-0">
       <div class="bg-white rounded-xl md:rounded-2xl shadow-lg flex-1 flex flex-col overflow-hidden">
         <!-- Header -->
         <div class="px-4 md:px-6 py-2 md:py-3 bg-cm-red text-white flex-shrink-0 rounded-t-xl md:rounded-t-2xl">
@@ -498,7 +629,7 @@ function handleFileImport(event) {
     </div>
 
     <!-- Panneau droit : Résultats KPI -->
-    <div class="w-full md:w-1/2 flex flex-col min-h-0">
+    <div class="w-full md:w-1/2 flex flex-col md:min-h-0">
       <div class="bg-white rounded-xl md:rounded-2xl shadow-lg flex-1 flex flex-col overflow-hidden">
         <!-- Header -->
         <div class="px-4 md:px-6 py-2 md:py-3 bg-cm-dark text-white flex-shrink-0 rounded-t-xl md:rounded-t-2xl">
@@ -661,8 +792,17 @@ function handleFileImport(event) {
           </div>
         </div>
 
-        <!-- Footer avec bouton export -->
-        <div v-if="kpiResults" class="px-3 md:px-4 py-2 md:py-3 border-t border-gray-100 flex-shrink-0 flex justify-end">
+        <!-- Footer avec boutons export -->
+        <div v-if="kpiResults" class="px-3 md:px-4 py-2 md:py-3 border-t border-gray-100 flex-shrink-0 flex justify-end gap-2">
+          <button 
+            @click="exportToExcel"
+            class="px-4 py-2 text-sm text-cm-dark rounded-lg hover:bg-gray-100 transition-all flex items-center gap-2 bg-gray-50 border border-gray-200"
+          >
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+            </svg>
+            Excel
+          </button>
           <button 
             @click="exportResults"
             class="px-4 py-2 text-sm text-white rounded-lg hover:opacity-90 transition-all flex items-center gap-2 bg-cm-red"
@@ -670,7 +810,7 @@ function handleFileImport(event) {
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M9 19l3 3m0 0l3-3m-3 3V10" />
             </svg>
-            Exporter PDF
+            PDF
           </button>
         </div>
       </div>

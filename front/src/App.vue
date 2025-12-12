@@ -61,7 +61,9 @@ watch(lastUpdate, () => {
     <LoginModal />
     
     <!-- Mode KPI: Simulation KPI -->
-    <Mode2SimulationKPI v-if="currentMode === 'kpi'" />
+    <div v-if="currentMode === 'kpi'" class="flex-1 min-h-0 overflow-auto">
+      <Mode2SimulationKPI />
+    </div>
     
     <!-- Mode Elaboration: Layout principal -->
     <div v-else class="flex-1 min-h-0 relative">
@@ -105,7 +107,7 @@ watch(lastUpdate, () => {
         leave-from-class="opacity-100"
         leave-to-class="opacity-0"
       >
-        <div v-if="!isEditingPlan" class="hidden md:block absolute top-1/2 translate-x-1/2 -translate-y-1/2 z-20" style="right: calc(25% + 4px)">
+        <div v-if="!isEditingPlan" class="hidden md:block absolute right-[25%] top-1/2 translate-x-1/2 -translate-y-1/2 z-20">
           <ExportButton />
         </div>
       </transition>

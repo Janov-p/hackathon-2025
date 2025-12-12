@@ -5,7 +5,7 @@
   <div class="max-w-4xl mx-auto">
     <div class="text-center py-12">
       <h1 class="text-4xl font-bold text-gray-900 mb-4">
-        Bienvenue sur Hackathon 2025
+        Bienvenue sur Piobu
       </h1>
       <p class="text-lg text-gray-600 mb-8">
         Application Vue.js connectée à une API

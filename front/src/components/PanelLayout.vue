@@ -120,29 +120,29 @@ defineProps({
   .md\:panel-cutout-bottom::after {
     content: '';
     position: absolute;
-    bottom: -12px;
+    bottom: -10px;
     left: 50%;
     transform: translateX(-50%);
-    width: 200px;
-    height: 40px;
+    width: 160px;
+    height: 38px;
     background-color: rgb(229, 231, 235);
-    border-radius: 100px 100px 0 0;
+    border-radius: 80px 80px 0 0;
     z-index: 20;
-    box-shadow: inset 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    box-shadow: inset 0 8px 12px -3px rgba(0, 0, 0, 0.1);
   }
 
   .md\:panel-cutout-top::before {
     content: '';
     position: absolute;
-    top: -12px;
+    top: -10px;
     left: 50%;
     transform: translateX(-50%);
-    width: 200px;
-    height: 40px;
+    width: 160px;
+    height: 38px;
     background-color: rgb(229, 231, 235);
-    border-radius: 0 0 100px 100px;
+    border-radius: 0 0 80px 80px;
     z-index: 20;
-    box-shadow: inset 0 -10px 15px -3px rgba(0, 0, 0, 0.1);
+    box-shadow: inset 0 -8px 12px -3px rgba(0, 0, 0, 0.1);
   }
 }
 </style>

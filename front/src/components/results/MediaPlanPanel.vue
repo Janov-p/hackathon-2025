@@ -2,6 +2,7 @@
 import { computed, ref, watch } from 'vue'
 import { useCampaignStore } from '../../stores/campaign'
 import { storeToRefs } from 'pinia'
+import * as XLSX from 'xlsx'
 
 const store = useCampaignStore()
 const { mediaPlan, isComplete, isLoading, lastUpdate, formData, isEditingPlan } = storeToRefs(store)
@@ -51,6 +52,100 @@ function handleEdit() {
   store.enterEditMode()
   emit('edit')
 }
+
+function exportToExcel() {
+  if (!hasData.value) return
+
+  const wb = XLSX.utils.book_new()
+  const campaignName = formData.value.nom || 'Plan-Media'
+
+  // === Feuille 1: Supports recommandés ===
+  const supportsData = [
+    ['PLAN MÉDIA - SUPPORTS RECOMMANDÉS'],
+    [''],
+    ['Campagne:', campaignName],
+    ['Date:', new Date().toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })],
+    [''],
+    ['Type', 'Nom', 'Justification']
+  ]
+  mediaPlan.value.supportsRecommandes.forEach(support => {
+    supportsData.push([support.type, support.nom, support.justification])
+  })
+  const wsSupports = XLSX.utils.aoa_to_sheet(supportsData)
+  wsSupports['!cols'] = [{ wch: 18 }, { wch: 25 }, { wch: 50 }]
+  XLSX.utils.book_append_sheet(wb, wsSupports, 'Supports')
+
+  // === Feuille 2: Formats proposés ===
+  const formatsData = [
+    ['FORMATS PROPOSÉS'],
+    [''],
+    ['Support', 'Format', 'Dimensions', 'Tarif unitaire (€)', 'Quantité', 'Total (€)']
+  ]
+  let totalFormats = 0
+  mediaPlan.value.formatsProposés.forEach(format => {
+    formatsData.push([
+      format.support,
+      format.format,
+      format.dimensions,
+      format.tarifUnitaire,
+      format.quantite,
+      format.total
+    ])
+    totalFormats += format.total
+  })
+  formatsData.push([])
+  formatsData.push(['', '', '', '', 'TOTAL', totalFormats])
+  const wsFormats = XLSX.utils.aoa_to_sheet(formatsData)
+  wsFormats['!cols'] = [{ wch: 15 }, { wch: 15 }, { wch: 15 }, { wch: 18 }, { wch: 10 }, { wch: 12 }]
+  XLSX.utils.book_append_sheet(wb, wsFormats, 'Formats')
+
+  // === Feuille 3: Calendrier ===
+  const calendarData = [
+    ['CALENDRIER DE DIFFUSION'],
+    [''],
+    ['Semaine', 'Support', 'Action']
+  ]
+  mediaPlan.value.calendrier.forEach(semaine => {
+    semaine.actions.forEach((action, idx) => {
+      calendarData.push([
+        idx === 0 ? `Semaine ${semaine.semaine}` : '',
+        action.support,
+        action.action
+      ])
+    })
+  })
+  const wsCalendar = XLSX.utils.aoa_to_sheet(calendarData)
+  wsCalendar['!cols'] = [{ wch: 12 }, { wch: 15 }, { wch: 25 }]
+  XLSX.utils.book_append_sheet(wb, wsCalendar, 'Calendrier')
+
+  // === Feuille 4: Chiffrage ===
+  const chiffrageData = [
+    ['CHIFFRAGE'],
+    [''],
+    ['Total HT', mediaPlan.value.chiffrage.totalHT, '€'],
+    ['TVA (20%)', mediaPlan.value.chiffrage.totalHT * 0.2, '€'],
+    ['Total TTC', mediaPlan.value.chiffrage.totalHT * 1.2, '€'],
+    [''],
+    ['=== RÉPARTITION PAR SUPPORT ==='],
+    ['Support', 'Montant (€)']
+  ]
+  Object.entries(mediaPlan.value.chiffrage.parSupport).forEach(([key, value]) => {
+    chiffrageData.push([key, value])
+  })
+  chiffrageData.push([])
+  chiffrageData.push(['=== RÉPARTITION PAR SEMAINE ==='])
+  chiffrageData.push(['Semaine', 'Montant (€)'])
+  mediaPlan.value.chiffrage.parSemaine.forEach(semaine => {
+    chiffrageData.push([`Semaine ${semaine.semaine}`, semaine.montant])
+  })
+  const wsChiffrage = XLSX.utils.aoa_to_sheet(chiffrageData)
+  wsChiffrage['!cols'] = [{ wch: 25 }, { wch: 15 }, { wch: 5 }]
+  XLSX.utils.book_append_sheet(wb, wsChiffrage, 'Chiffrage')
+
+  // Télécharger le fichier
+  const fileName = `plan-media-${campaignName.replace(/[^a-zA-Z0-9]/g, '-')}-${new Date().toISOString().split('T')[0]}.xlsx`
+  XLSX.writeFile(wb, fileName)
+}
 </script>
 
 <template>
@@ -70,16 +165,28 @@ function handleEdit() {
 
     <!-- Media Plan Content -->
     <div v-else class="space-y-4 overflow-auto">
-      <!-- Edit button -->
-      <button
-        @click="handleEdit"
-        class="w-full flex items-center justify-center gap-2 px-3 md:px-4 py-2.5 md:py-3 min-h-[44px] bg-cm-red/10 text-cm-red font-medium rounded-lg md:rounded-xl border-2 border-dashed border-cm-red/30 hover:bg-cm-red hover:text-white hover:border-cm-red active:scale-[0.98] transition-all duration-200"
-      >
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-        </svg>
-        <span class="text-sm md:text-base">Modifier le plan média</span>
-      </button>
+      <!-- Action buttons -->
+      <div class="flex gap-2">
+        <button
+          @click="handleEdit"
+          class="flex-1 flex items-center justify-center gap-2 px-3 md:px-4 py-2.5 md:py-3 min-h-[44px] bg-cm-red/10 text-cm-red font-medium rounded-lg md:rounded-xl border-2 border-dashed border-cm-red/30 hover:bg-cm-red hover:text-white hover:border-cm-red active:scale-[0.98] transition-all duration-200"
+        >
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+          </svg>
+          <span class="text-sm md:text-base">Modifier</span>
+        </button>
+        <button
+          @click="exportToExcel"
+          class="flex items-center justify-center gap-2 px-3 md:px-4 py-2.5 md:py-3 min-h-[44px] bg-emerald-50 text-emerald-700 font-medium rounded-lg md:rounded-xl border-2 border-emerald-200 hover:bg-emerald-600 hover:text-white hover:border-emerald-600 active:scale-[0.98] transition-all duration-200"
+          title="Exporter en Excel"
+        >
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+          </svg>
+          <span class="hidden md:inline text-sm">Excel</span>
+        </button>
+      </div>
 
       <!-- Supports recommandés -->
       <div class="border border-gray-200 rounded-lg md:rounded-xl overflow-hidden">
