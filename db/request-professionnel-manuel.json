@@ -1,0 +1,37 @@
+{
+  "targetMode": "professionnels",
+  "repartitionMode": "manuel",
+  "formData": {
+    "nomClient": "SARL Corsica Business",
+    "matriculeCommercial": "CM-2025-042",
+    "nom": "Campagne B2B Rentrée",
+    "secteur": "Services aux entreprises",
+    "periodeDebut": "2025-09-01",
+    "periodeFin": "2025-11-30",
+    "zones": ["Corse-du-Sud", "Haute-Corse"],
+    "microZones": ["Ajaccio", "Bastia"],
+    "objectifs": ["notoriete", "leads", "fidelisation"],
+    "budget": 25000,
+
+    "cible": {
+      "taillesEntreprise": ["TPE", "PME", "ETI"],
+      "secteursCibles": ["BTP", "Commerce", "Restauration", "Hotellerie"],
+      "fonctions": ["dirigeant", "directeur-commercial", "responsable-marketing"],
+      "zoneImplantation": ["Ajaccio", "Bastia", "Porto-Vecchio"]
+    },
+
+    "repartition": {
+      "print": 25,
+      "digital": 35,
+      "reseaux": 15,
+      "event": 25
+    },
+
+    "supports": {
+      "print": ["quotidien", "supplement-eco"],
+      "digital": ["site-web", "newsletter", "display"],
+      "reseauxSociaux": ["linkedin", "facebook"],
+      "events": ["club-impresa", "petit-dejeuner-decideurs"]
+    }
+  }
+}
