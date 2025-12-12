@@ -64,10 +64,8 @@ function selectEntreprise(entreprise) {
     dirigeants: entreprise.dirigeants || []
   }
   
-  // Mettre à jour le nom du client avec le nom de l'entreprise
-  if (!formData.value.nomClient) {
-    formData.value.nomClient = entreprise.nomComplet || entreprise.nomRaisonSociale || ''
-  }
+  // Mettre à jour le nom du client avec la dénomination sociale de l'entreprise
+  formData.value.nomClient = entreprise.nomRaisonSociale || entreprise.nomComplet || ''
   
   // Fermer le dropdown et réinitialiser la recherche
   searchQuery.value = ''
