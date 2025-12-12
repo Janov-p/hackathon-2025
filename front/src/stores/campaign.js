@@ -17,6 +17,24 @@ export const useCampaignStore = defineStore('campaign', () => {
     periodeFin: '',
     zones: [],
     microZones: [],
+    
+    // Informations entreprise (depuis API recherche-entreprises)
+    entreprise: {
+      siren: '',
+      siret: '',
+      nomComplet: '',
+      nomRaisonSociale: '',
+      sigle: '',
+      adresse: '',
+      codePostal: '',
+      commune: '',
+      departement: '',
+      activitePrincipale: '',
+      categorieEntreprise: '', // TPE, PME, ETI, GE
+      natureJuridique: '',
+      dateCreation: '',
+      dirigeants: []
+    },
 
     // Section 2: Objectifs
     objectifs: [],
@@ -331,6 +349,22 @@ export const useCampaignStore = defineStore('campaign', () => {
       periodeFin: '',
       zones: [],
       microZones: [],
+      entreprise: {
+        siren: '',
+        siret: '',
+        nomComplet: '',
+        nomRaisonSociale: '',
+        sigle: '',
+        adresse: '',
+        codePostal: '',
+        commune: '',
+        departement: '',
+        activitePrincipale: '',
+        categorieEntreprise: '',
+        natureJuridique: '',
+        dateCreation: '',
+        dirigeants: []
+      },
       objectifs: [],
       taillesEntreprise: [],
       secteursCibles: [],

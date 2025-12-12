@@ -1,6 +1,7 @@
 <script setup>
 import { ref, computed, watch } from 'vue'
 import { useCampaignStore } from '../../stores/campaign'
+import { useAuthStore } from '../../stores/auth'
 import { storeToRefs } from 'pinia'
 import { useMediaCalculator } from '../../composables/useMediaCalculator'
 import { SECTEURS, ZONES_GEO, MICRO_ZONES } from '../../data/constants'
@@ -11,10 +12,22 @@ import TargetPro from './TargetPro.vue'
 import TargetParticuliers from './TargetParticuliers.vue'
 import BudgetSection from './BudgetSection.vue'
 import SupportsSection from './SupportsSection.vue'
+import EntrepriseAutocomplete from './EntrepriseAutocomplete.vue'
 
 const store = useCampaignStore()
+const authStore = useAuthStore()
 const { formData, targetMode, formProgress, isComplete } = storeToRefs(store)
+const { matricule: userMatricule, isLoggedIn } = storeToRefs(authStore)
 const { isCalculating } = useMediaCalculator()
+
+// Fonction pour remplir le matricule de l'utilisateur connecté
+function fillUserMatricule() {
+  if (isLoggedIn.value && userMatricule.value) {
+    formData.value.matriculeCommercial = userMatricule.value
+  } else {
+    authStore.openLoginModal()
+  }
+}
 
 // Track if target mode has been confirmed (user clicked on a choice)
 const targetModeConfirmed = ref(false)
@@ -148,6 +161,9 @@ function handleReset() {
           collapsedSections[1] ? 'max-h-0 opacity-0' : 'max-h-[2000px] opacity-100'
         ]"
       >
+      <!-- Recherche entreprise (API gouv) -->
+      <EntrepriseAutocomplete />
+
       <!-- Dénomination sociale / Nom du client -->
       <div>
         <label class="block text-xs font-semibold text-gray-700 mb-1">
@@ -175,7 +191,7 @@ function handleReset() {
           />
           <button
             type="button"
-            @click="formData.matriculeCommercial = 'MON-MATRICULE'"
+            @click="fillUserMatricule"
             class="px-3 py-2.5 md:py-2 min-h-[44px] bg-cm-red/10 text-cm-red text-xs font-medium rounded-lg hover:bg-cm-red/20 active:bg-cm-red/30 transition-colors whitespace-nowrap"
           >
             Mon matricule
