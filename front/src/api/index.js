@@ -27,3 +27,8 @@ export const itemsService = {
   update: (id, data) => api.put(`/items/${id}`, data),
   delete: (id) => api.delete(`/items/${id}`)
 }
+
+export const mediaService = {
+  generatePlan: (data) => api.post('/media/plan', data),
+  getOptions: () => api.get('/media/options')
+}

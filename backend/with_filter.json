@@ -1,0 +1,122 @@
+{
+  "allocation_mode": "auto_intelligent",
+  "campaign_source": "direct_json",
+  "media_plan": {
+    "budget_summary": {
+      "allocation_amount": {
+        "digital": 700.0,
+        "events": 300.0,
+        "print": 500.0,
+        "social": 500.0
+      },
+      "allocation_percentage": {
+        "digital": 35,
+        "events": 15,
+        "print": 25,
+        "social": 25
+      },
+      "remaining": 2000,
+      "total_budget": 2000
+    },
+    "channel_strategy": {
+      "digital": {
+        "budget": 700.0,
+        "percentage": 35,
+        "rationale": "Allocation de 35% pour le digital, adapt\u00e9 aux cibles connect\u00e9es et pour un suivi pr\u00e9cis des performances.",
+        "recommended_supports": [
+          "display_cible",
+          "site_web",
+          "google_ads",
+          "newsletter",
+          "video_online",
+          "affiliation"
+        ]
+      },
+      "events": {
+        "budget": 300.0,
+        "percentage": 15,
+        "rationale": "Allocation de 15% pour les \u00e9v\u00e9nements, parfait pour les relations directes et la fid\u00e9lisation.",
+        "recommended_supports": [
+          "evenement_local",
+          "atelier_participatif",
+          "demonstration_produit"
+        ]
+      },
+      "print": {
+        "budget": 500.0,
+        "percentage": 25,
+        "rationale": "Allocation de 25% pour le print, efficace pour la cr\u00e9dibilit\u00e9 et la m\u00e9morisation \u00e0 long terme.",
+        "recommended_supports": [
+          "quotidien_regional",
+          "magazine_generaliste"
+        ]
+      },
+      "social": {
+        "budget": 500.0,
+        "percentage": 25,
+        "rationale": "Allocation de 25% pour les r\u00e9seaux sociaux, id\u00e9al pour l'engagement et la cr\u00e9ation de communaut\u00e9.",
+        "recommended_supports": [
+          "instagram",
+          "facebook"
+        ]
+      }
+    },
+    "kpi_targets": {
+      "estimated_cpc": 0.02,
+      "estimated_cpm": 0.72,
+      "estimated_impressions": 2790000,
+      "estimated_participants": 0,
+      "estimated_reach": 2371500
+    },
+    "metadata": {
+      "allocation_mode": "auto_intelligent",
+      "campaign_name": "Sans nom",
+      "client": "Inconnu",
+      "generated_at": "2025-12-12T14:36:46.882956",
+      "period": {
+        "end": null,
+        "start": null
+      },
+      "version": "2.0"
+    },
+    "optimization_tips": [
+      "Digital : Testez A/B vos landing pages et optimisez pour le mobile",
+      "Social : Planifiez votre contenu \u00e0 l'avance et r\u00e9agissez aux trends"
+    ],
+    "recommendations": [
+      "Focus digital (35%) : Privil\u00e9giez le marketing automatis\u00e9 et le retargeting"
+    ],
+    "target_analysis": {
+      "objectives": [],
+      "profile": {
+        "criteria": {
+          "sexe": [
+            "femme"
+          ]
+        },
+        "targetMode": "particuliers"
+      },
+      "sector": "",
+      "target_mode": "particuliers"
+    },
+    "timeline": {
+      "phase_1": {
+        "duration": "2-3 semaines",
+        "name": "Pr\u00e9paration & Cr\u00e9atifs"
+      },
+      "phase_2": {
+        "duration": "1-2 semaines",
+        "name": "Lancement & Activation"
+      },
+      "phase_3": {
+        "duration": "4-6 semaines",
+        "name": "Croissance & Optimisation"
+      },
+      "phase_4": {
+        "duration": "1-2 semaines",
+        "name": "Consolidation & Analyse"
+      }
+    }
+  },
+  "message": "Plan m\u00e9dia g\u00e9n\u00e9r\u00e9 avec succ\u00e8s"
+}

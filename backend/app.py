@@ -35,7 +35,9 @@ for path_name, path in [
 # Importer les routes
 try:
     from routes.kpi import kpi_bp
+    from routes.media import media_bp
     app.register_blueprint(kpi_bp, url_prefix='/api')
+    app.register_blueprint(media_bp, url_prefix='/api/media')
     print("✓ Routes loaded successfully")
 except ImportError as e:
     print(f"✗ Error loading routes: {e}")

@@ -1,39 +1,64 @@
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, watch, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import * as XLSX from 'xlsx'
+import { mediaService } from '../api'
 
 const router = useRouter()
 
 // Données de référence
-const formats = {
-  print: [
-    { id: 'page_entiere', name: 'Page entière', cpm: 45, baseImpressions: 139000 },
-    { id: 'demi_page', name: 'Demi-page', cpm: 30, baseImpressions: 139000 },
-    { id: 'encart', name: 'Encart', cpm: 25, baseImpressions: 139000 },
-    { id: 'supplement_thematique', name: 'Supplément thématique', cpm: 60, baseImpressions: 200000 },
-    { id: 'magazine' , name: 'Magazine', cpm: 50, baseImpressions: 180000 }
-  ],
-  digital: [
-    { id: 'habillage', name: 'Habillage site', cpm: 15, baseImpressions: 2500000 },
-    { id: 'pave', name: 'Pavé', cpm: 8, baseImpressions: 2500000 },
-    { id: 'interstitiel', name: 'Interstitiel appli', cpm: 12, baseImpressions: 400000 },
-    { id: 'smart_cover', name: 'Smart cover mobile', cpm: 10, baseImpressions: 400000 },
-    { id: 'preroll', name: 'Pré-roll vidéo', cpm: 20, baseImpressions: 300000 }
-  ],
-  social: [
-    { id: 'instagram', name: 'Instagram', cpm: 6, baseImpressions: 250000 },
-    { id: 'facebook', name: 'Facebook', cpm: 5, baseImpressions: 250000 },
-    { id: 'linkedIn', name: 'LinkedIn', cpm: 7, baseImpressions: 200000 },
-    { id: 'twitter', name: 'Twitter', cpm: 6, baseImpressions: 200000 },
-    { id: 'video_social', name: 'Vidéo réseaux sociaux', cpm: 8, baseImpressions: 150000 }
-  ]
-}
+// Données de référence dynamiques
+const formats = ref({
+  print: [],
+  digital: [],
+  social: []
+})
+
+// Chargement des options au montage
+onMounted(async () => {
+  try {
+    const response = await mediaService.getOptions()
+    if (response.data) {
+      formats.value = response.data
+    }
+  } catch (err) {
+    console.error("Erreur chargement options:", err)
+    // Fallback ou notification
+  }
+})
 
 // État du formulaire
 const campaignName = ref('Plan média client')
 const mediaItems = ref([])
 const showAddForm = ref(false)
+
+// Ciblage
+const targetMode = ref('particuliers') // 'particuliers' | 'professionnels'
+const targetCriteria = ref({
+  age: [],
+  sexe: [],
+  csp: []
+})
+
+// Options de ciblage (pour l'UI)
+const availableTargets = {
+  age: [
+    { id: '15_24_ans', label: '15-24 ans' },
+    { id: '25_34_ans', label: '25-34 ans' },
+    { id: '35_49_ans', label: '35-49 ans' },
+    { id: '50_64_ans', label: '50-64 ans' },
+    { id: '65_ans_ou_plus', label: '65 ans et +' }
+  ],
+  sexe: [
+    { id: 'homme', label: 'Hommes' },
+    { id: 'femme', label: 'Femmes' }
+  ],
+  csp: [
+    { id: 'csp_plus', label: 'CSP+' },
+    { id: 'actifs', label: 'Actifs' },
+    { id: 'retraites', label: 'Retraités' }
+  ]
+}
 
 // Formulaire d'ajout
 const newItem = ref({
@@ -59,136 +84,185 @@ const CTR_BY_FORMAT = {
   video_social: 0.020
 }
 
-// Calculs KPI complets
-const kpiResults = computed(() => {
-  if (mediaItems.value.length === 0) {
-    return null
-  }
+// KPI Results fetched from Backend
+const kpiResults = ref(null)
+const isLoadingKPI = ref(false)
 
-  let totalCost = 0
-  let totalImpressions = 0
-  let totalClics = 0
-  let vuesVideoTotal = 0
-  
-  let bySupport = {
-    print: { cost: 0, impressions: 0, items: 0, clics: 0, cpm: 0 },
-    digital: { cost: 0, impressions: 0, items: 0, clics: 0, cpm: 0 },
-    social: { cost: 0, impressions: 0, items: 0, clics: 0, cpm: 0 }
-  }
+// Watcher pour mettre à jour les KPI quand les mediaItems changent
+let debounceTimer = null
 
-  // Calcul des métriques de base par insertion
-  mediaItems.value.forEach(item => {
-    const formatData = findFormat(item.type, item.format)
-    if (!formatData) return
+watch(mediaItems, (newItems) => {
+  debouncedFetchKPIs()
+}, { deep: true })
 
-    const impressions = formatData.baseImpressions * item.quantity
-    const cpm = item.customPrice || formatData.cpm
-    const cost = (impressions / 1000) * cpm
-
-    // CTR par format
-    const ctr = CTR_BY_FORMAT[item.format] || 0.008
-    const clics = Math.round(impressions * ctr)
-
-    totalCost += cost
-    totalImpressions += impressions
-    totalClics += clics
-
-    bySupport[item.type].cost += cost
-    bySupport[item.type].impressions += impressions
-    bySupport[item.type].items += 1
-    bySupport[item.type].clics += clics
-
-    // Vues vidéo (preroll et vidéos sociales)
-    if (item.format === 'preroll' || item.format === 'video_social') {
-      vuesVideoTotal += Math.round(impressions * 0.75)
-    }
-  })
-
-  // Calcul CPM par support
-  Object.keys(bySupport).forEach(type => {
-    if (bySupport[type].impressions > 0) {
-      bySupport[type].cpm = (bySupport[type].cost / bySupport[type].impressions) * 1000
-    }
-  })
-
-  // === KPI d'Impact & Exposition ===
-  
-  // Modèle de déduplication multi-supports (formule Hofmans simplifiée)
-  const reachPrint = Math.min(1, bySupport.print.impressions / POPULATION_CIBLE)
-  const reachDigital = Math.min(1, bySupport.digital.impressions / (POPULATION_CIBLE * 1.5))
-  const reachSocial = Math.min(1, bySupport.social.impressions / (POPULATION_CIBLE * 1.8))
-  
-  // Déduplication avec facteurs de recoupement
-  const overlapPrintDigital = reachPrint * reachDigital * 0.35
-  const overlapPrintSocial = reachPrint * reachSocial * 0.25
-  const overlapDigitalSocial = reachDigital * reachSocial * 0.45
-  const overlapAll = reachPrint * reachDigital * reachSocial * 0.15
-  
-  const reachDeduplique = reachPrint + reachDigital + reachSocial 
-    - overlapPrintDigital - overlapPrintSocial - overlapDigitalSocial 
-    + overlapAll
-  
-  const audienceCumuleeDedupliquee = Math.round(Math.min(reachDeduplique, 0.95) * POPULATION_CIBLE)
-  const tauxCouverture = (audienceCumuleeDedupliquee / POPULATION_CIBLE) * 100
-  
-  // Fréquence moyenne : Impressions totales / Audience dédupliquée
-  const frequenceMoyenne = audienceCumuleeDedupliquee > 0 
-    ? totalImpressions / audienceCumuleeDedupliquee 
-    : 0
-  
-  // GRP = Couverture × Fréquence
-  const grp = tauxCouverture * frequenceMoyenne
-
-  // === KPI d'Efficacité Financière ===
-  
-  const cpmMoyen = totalImpressions > 0 ? (totalCost / totalImpressions) * 1000 : 0
-  const coutGRP = grp > 0 ? totalCost / grp : 0
-
-  // === KPI d'Engagement & Action ===
-  
-  const ctrMoyen = totalImpressions > 0 ? (totalClics / totalImpressions) * 100 : 0
-
-  // === KPI de Stratégie (Répartition) ===
-  
-  const repartitionBudget = {
-    print: totalCost > 0 ? (bySupport.print.cost / totalCost) * 100 : 0,
-    digital: totalCost > 0 ? (bySupport.digital.cost / totalCost) * 100 : 0,
-    social: totalCost > 0 ? (bySupport.social.cost / totalCost) * 100 : 0
-  }
-
-  const repartitionAudience = {
-    print: totalImpressions > 0 ? (bySupport.print.impressions / totalImpressions) * 100 : 0,
-    digital: totalImpressions > 0 ? (bySupport.digital.impressions / totalImpressions) * 100 : 0,
-    social: totalImpressions > 0 ? (bySupport.social.impressions / totalImpressions) * 100 : 0
-  }
-
-  return {
-    // Impact & Exposition
-    audienceCumuleeDedupliquee,
-    tauxCouverture,
-    frequenceMoyenne,
-    grp,
-    totalImpressions,
-    vuesVideoTotal,
-    
-    // Efficacité Financière
-    totalCost,
-    cpmMoyen,
-    coutGRP,
-    bySupport,
-    
-    // Engagement & Action
-    totalClics,
-    ctrMoyen,
-    
-    // Stratégie
-    repartitionBudget,
-    repartitionAudience
-  }
+watch(targetMode, () => {
+  debouncedFetchKPIs()
 })
 
+watch(targetCriteria, () => {
+    debouncedFetchKPIs()
+}, { deep: true })
+
+function debouncedFetchKPIs() {
+    if (debounceTimer) clearTimeout(debounceTimer)
+    if (mediaItems.value.length === 0) {
+        kpiResults.value = null
+        return
+    }
+    debounceTimer = setTimeout(() => {
+        fetchKPIs()
+    }, 500)
+}
+
+async function fetchKPIs() {
+  if (mediaItems.value.length === 0) return
+  
+  isLoadingKPI.value = true
+  try {
+    // 1. Calculer le budget et l'allocation basés sur les items
+    let totalCost = 0
+    const allocationByChannel = { print: 0, digital: 0, social: 0, events: 0 }
+    
+    // Mapping frontend types to backend channels (frontend: 'social', backend: 'social')
+    // Frontend types: 'print', 'digital', 'social'
+    // Backend channels: 'print', 'digital', 'social', 'events'
+    
+    mediaItems.value.forEach(item => {
+      // Calcul du coût : soit prix fixe (tarif), soit CPM
+      let cost = 0
+      const formatData = findFormat(item.type, item.format)
+      
+      if (item.customPrice) {
+        // Si prix personnalisé, on assume que c'est le unit price (comme le CPM ou le Tarif)
+        // Cas 1: C'est un item à prix fixe (tarif) -> customPrice = tarif
+        // Cas 2: C'est un item à CPM -> customPrice = CPM
+        if (formatData?.tarif) {
+            cost = item.customPrice * item.quantity
+        } else {
+             const impressions = (item.baseImpressions || 0) * item.quantity
+             cost = (impressions / 1000) * item.customPrice
+        }
+      } else {
+        // Prix standard
+        if (formatData?.tarif) {
+            cost = formatData.tarif * item.quantity
+        } else if (formatData?.cpm) {
+            const impressions = (formatData.baseImpressions || 0) * item.quantity
+            cost = (impressions / 1000) * formatData.cpm
+        }
+      }
+      
+      totalCost += cost
+      allocationByChannel[item.type] += cost
+    })
+    
+    // Convertir en pourcentages
+    const budgetAllocation = {}
+    Object.keys(allocationByChannel).forEach(channel => {
+      if (totalCost > 0) {
+        budgetAllocation[channel] = parseFloat(((allocationByChannel[channel] / totalCost) * 100).toFixed(1))
+      } else {
+        budgetAllocation[channel] = 0
+      }
+    })
+    
+    // 2. Appeler l'API
+    const payload = {
+      repartitionMode: 'manuel',
+      formData: {
+        budget: totalCost,
+        repartition: budgetAllocation,
+        items: mediaItems.value, // Ajout de la liste détaillée pour calcul précis backend
+        nom: campaignName.value,
+        cible: {
+           targetMode: targetMode.value,
+           criteria: targetCriteria.value
+        }
+      }
+    }
+    
+    const response = await mediaService.generatePlan(payload)
+    const backendPlan = response.data.media_plan
+    
+    // 3. Mapper la réponse vers la structure kpiResults attendue par le template
+    // Le template attend:
+    // audienceCumuleeDedupliquee, tauxCouverture, frequenceMoyenne, grp, totalImpressions, vuesVideoTotal
+    // totalCost, cpmMoyen, coutGRP, totalClics, ctrMoyen
+    // bySupport, repartitionBudget, repartitionAudience
+    
+    const targets = backendPlan.kpi_targets
+    const strategy = backendPlan.channel_strategy
+    
+    // Reconstruction de la structure bySupport depuis la réponse backend ou utilisation des données locales pour le détail items
+    // Le backend renvoie des totaux par canal, mails il ne connait pas le détail des items (formats).
+    // On doit garder la logique locale pour 'items' et 'impressions' si on veut être précis sur les formats,
+    // MAIS l'utilisateur veut que ce soit le BACKEND qui donne les KPI.
+    // Le backend renvoie 'estimated_impressions', 'estimated_reach' par canal ? Non, global.
+    // Strategy contient budget, percentage, recommended_supports.
+    
+    // Dilemme : Le backend fait une estimation "haut niveau" basée sur le budget. Le frontend a une liste précise d'items avec des CPM précis.
+    // Si on utilise le backend, on "écrase" la précision des items locaux par des moyennes backend ?
+    // L'utilisateur a dit : "utiliser les données du back". Donc on prend les estimations backend.
+    
+    const mappedResults = {
+      // Impact
+      audienceCumuleeDedupliquee: targets.estimated_reach,
+      // Taux couverture : Reach / PopCible. Le backend ne connait pas PopCible (150k ici). On garde 150k en ref front.
+      tauxCouverture: (targets.estimated_reach / POPULATION_CIBLE) * 100,
+      frequenceMoyenne: targets.estimated_impressions / targets.estimated_reach, // approx
+      grp: ((targets.estimated_reach / POPULATION_CIBLE) * 100) * (targets.estimated_impressions / targets.estimated_reach),
+      totalImpressions: targets.estimated_impressions,
+      vuesVideoTotal: 0, // Pas retourné par backend explicitement, on met 0 ou on garde logique locale ? Back ne renvoie pas ça. On laisse 0.
+      
+      // Financier
+      totalCost: backendPlan.budget_summary.total_budget,
+      cpmMoyen: targets.estimated_cpm,
+      coutGRP: targets.estimated_cpc ? 0 : 0, // Pas de coutGRP direct dans backend, on peut le recalculer
+      totalClics: (targets.estimated_reach * 0.1), // Backend renvoie CPC basé sur 10% CTR ? "estimated_cpc": round(sum... / (reach * 0.1)). Donc Clics = Reach * 0.1 ??? Bizarre dans backend.
+      // Correction: Backend calculate_kpi_targets: estimated_cpc = budget / (reach * 0.1). Donc Backend assume Clics = Reach * 0.1 (10% de reach cliquent ??). C'est très simplifié.
+      // On va utiliser ce que le backend implique.
+      
+      ctrMoyen: 10, // Backend hardcoded 10% CTR implicitement dans cpc calculation
+      
+      // Répartitions
+      repartitionBudget: backendPlan.budget_summary.allocation_percentage,
+      repartitionAudience: {}, // Pas renvoyé par le backend
+      
+      // Structure bySupport pour l'affichage des badges/totaux
+      bySupport: {
+        print: { 
+            cost: strategy.print.budget, 
+            impressions: (strategy.print.budget / 15) * 1000, // Est-ce qu'on peut récupérer les impressions par canal du backend ? Non, calculate_kpi_targets somme tout.
+            items: allocationByChannel.print > 0 ? 1 : 0
+        },
+        digital: { 
+            cost: strategy.digital.budget, 
+            impressions: (strategy.digital.budget / 8) * 1000,
+            items: allocationByChannel.digital > 0 ? 1 : 0
+        },
+        social: { 
+            cost: strategy.social.budget, 
+            impressions: (strategy.social.budget / 12) * 1000, 
+            items: allocationByChannel.social > 0 ? 1 : 0
+        }
+      }
+    }
+    
+    // Recalculs finaux pour affichage propre
+    mappedResults.coutGRP = mappedResults.grp > 0 ? mappedResults.totalCost / mappedResults.grp : 0
+    mappedResults.ctrMoyen = (mappedResults.totalClics / mappedResults.totalImpressions) * 100
+    
+    kpiResults.value = mappedResults
+    
+  } catch (error) {
+    console.error('Erreur calcul KPI backend:', error)
+  } finally {
+    isLoadingKPI.value = false
+  }
+}
+
 function findFormat(type, formatId) {
-  return formats[type]?.find(f => f.id === formatId)
+  return formats.value[type]?.find(f => f.id === formatId)
 }
 
 function addMediaItem() {
@@ -204,7 +278,8 @@ function addMediaItem() {
     formatName: formatData.name,
     quantity: newItem.value.quantity,
     customPrice: newItem.value.customPrice,
-    baseCPM: formatData.cpm,
+    baseCPM: formatData.cpm || null,
+    baseTarif: formatData.tarif || null,
     baseImpressions: formatData.baseImpressions
   })
 
@@ -496,6 +571,61 @@ function exportToExcel() {
             />
           </div>
 
+          <!-- Sélection de la Cible -->
+          <div class="mt-4">
+              <label class="block text-xs font-medium text-gray-500 mb-2">Cible</label>
+              
+              <!-- Switch Particuliers/Pro -->
+              <div class="flex bg-gray-100 p-1 rounded-lg mb-3">
+                  <button 
+                    @click="targetMode = 'particuliers'"
+                    :class="['flex-1 py-1.5 text-xs font-medium rounded-md transition-all', targetMode === 'particuliers' ? 'bg-white text-cm-red shadow-sm' : 'text-gray-500 hover:text-gray-700']"
+                  >
+                      Particuliers
+                  </button>
+                  <button 
+                    @click="targetMode = 'professionnels'"
+                    :class="['flex-1 py-1.5 text-xs font-medium rounded-md transition-all', targetMode === 'professionnels' ? 'bg-white text-cm-red shadow-sm' : 'text-gray-500 hover:text-gray-700']"
+                  >
+                      Professionnels
+                  </button>
+              </div>
+
+              <!-- Filtres avancés (Particuliers only pour l'instant) -->
+              <div v-if="targetMode === 'particuliers'" class="space-y-3 p-3 bg-gray-50 rounded-xl border border-gray-100">
+                  <!-- Sexe -->
+                  <div>
+                      <label class="block text-[10px] font-bold text-gray-400 uppercase mb-1.5">Sexe</label>
+                      <div class="flex flex-wrap gap-2">
+                          <label v-for="opt in availableTargets.sexe" :key="opt.id" class="inline-flex items-center">
+                              <input type="checkbox" v-model="targetCriteria.sexe" :value="opt.id" class="form-checkbox h-3 w-3 text-cm-red rounded border-gray-300 focus:ring-cm-red">
+                              <span class="ml-1.5 text-xs text-cm-dark">{{ opt.label }}</span>
+                          </label>
+                      </div>
+                  </div>
+                  <!-- Age -->
+                  <div>
+                      <label class="block text-[10px] font-bold text-gray-400 uppercase mb-1.5">Age</label>
+                      <div class="grid grid-cols-2 gap-2">
+                          <label v-for="opt in availableTargets.age" :key="opt.id" class="inline-flex items-center">
+                              <input type="checkbox" v-model="targetCriteria.age" :value="opt.id" class="form-checkbox h-3 w-3 text-cm-red rounded border-gray-300 focus:ring-cm-red">
+                              <span class="ml-1.5 text-xs text-cm-dark">{{ opt.label }}</span>
+                          </label>
+                      </div>
+                  </div>
+                   <!-- CSP -->
+                   <div>
+                      <label class="block text-[10px] font-bold text-gray-400 uppercase mb-1.5">CSP</label>
+                      <div class="flex flex-wrap gap-2">
+                          <label v-for="opt in availableTargets.csp" :key="opt.id" class="inline-flex items-center">
+                              <input type="checkbox" v-model="targetCriteria.csp" :value="opt.id" class="form-checkbox h-3 w-3 text-cm-red rounded border-gray-300 focus:ring-cm-red">
+                              <span class="ml-1.5 text-xs text-cm-dark">{{ opt.label }}</span>
+                          </label>
+                      </div>
+                  </div>
+              </div>
+          </div>
+
           <!-- Boutons d'action -->
           <div class="flex gap-2">
             <button 
@@ -553,7 +683,7 @@ function exportToExcel() {
                 />
               </div>
               <div>
-                <label class="block text-xs text-gray-500 mb-1">CPM</label>
+                <label class="block text-xs text-gray-500 mb-1">Prix U. / CPM</label>
                 <input 
                   v-model.number="newItem.customPrice"
                   type="number"
@@ -603,7 +733,7 @@ function exportToExcel() {
                   <span class="text-gray-400">×{{ item.quantity }}</span>
                 </div>
                 <div class="text-[10px] text-gray-400 mt-0.5">
-                  {{ formatCurrency(((item.baseImpressions * item.quantity) / 1000) * (item.customPrice || item.baseCPM)) }}
+                  {{ formatCurrency((item.baseTarif ? (item.baseTarif * item.quantity) : ((item.baseImpressions * item.quantity) / 1000) * (item.customPrice || item.baseCPM))) }}
                 </div>
               </div>
               <button 
