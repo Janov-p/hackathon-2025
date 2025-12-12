@@ -1,0 +1,22 @@
+{
+  "targetMode": "particuliers",
+  "repartitionMode": "auto",
+  "formData": {
+    "nomClient": "Marie Martin",
+    "matriculeCommercial": "CM-2025-015",
+    "nom": "Campagne Rentrée Scolaire",
+    "secteur": "Commerce de détail",
+    "periodeDebut": "2025-08-15",
+    "periodeFin": "2025-09-30",
+    "zones": ["Corse-du-Sud"],
+    "objectifs": ["notoriete", "trafic"],
+    "budget": 8000,
+
+    "cible": {
+      "ages": ["35-44", "45-54"],
+      "sexe": "mixte",
+      "csp": ["CSP+", "Cadres"],
+      "centresInteret": ["famille", "education", "shopping"]
+    }
+  }
+}

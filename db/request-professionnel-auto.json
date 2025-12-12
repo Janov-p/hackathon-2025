@@ -1,0 +1,22 @@
+{
+  "targetMode": "professionnels",
+  "repartitionMode": "auto",
+  "formData": {
+    "nomClient": "Cabinet Conseil Mediterranée",
+    "matriculeCommercial": "CM-2025-078",
+    "nom": "Lancement Offre Conseil RH",
+    "secteur": "Conseil",
+    "periodeDebut": "2025-10-01",
+    "periodeFin": "2025-12-31",
+    "zones": ["Corse-du-Sud"],
+    "objectifs": ["notoriete", "leads"],
+    "budget": 12000,
+
+    "cible": {
+      "taillesEntreprise": ["PME", "ETI", "GE"],
+      "secteursCibles": ["Tous secteurs"],
+      "fonctions": ["dirigeant", "DRH", "responsable-rh"],
+      "zoneImplantation": ["Ajaccio", "Bastia"]
+    }
+  }
+}
